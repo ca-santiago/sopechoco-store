@@ -73,7 +73,12 @@ function ProductBuilder(props: ProductBuilderProps) {
 
   const handleExtraSelectionChange = (selection: ProductExtra[], extraOptionId: string) => {
     setSelectedExtras(prev => { prev[extraOptionId] = selection.map(extra => extra.id) });
-    setProductItem(prev => { prev.addedExtras = selection.map(extra => `${extraOptionId}:${extra.id}`) });
+
+    setProductItem(prev => {
+      const thisExtraOptionExtrasRemoved = prev.addedExtras.filter(e => !e.startsWith(extraOptionId));
+      const newExtras = selection.map(extra => `${extraOptionId}:${extra.id}`);
+      prev.addedExtras = [...thisExtraOptionExtrasRemoved, ...newExtras];
+    });
   }
 
   const extraPrices: number[] = Object.values(selectedExtras).flat().map(s => {
@@ -99,7 +104,7 @@ function ProductBuilder(props: ProductBuilderProps) {
         </p>
       </div>
 
-      <div className="empty:hidden">
+      <div className="empty:hidden flex flex-col gap-4">
         {processedExtras.map((extraOption) =>
           <ProductExtraSelector
             initialSelection={selectedExtras[extraOption.id] || []}

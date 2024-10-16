@@ -51,11 +51,11 @@ function ProductExtraSelector(props: ProductExtraSelectorProps): React.JSX.Eleme
           {extraOptionData.min === 1 && <p className="text-xs px-2 py-1 rounded-full bg-slate-400 text-white">Required</p>}
         </div>
       </div>
+    
       <fieldset className='flex flex-col gap-1 mt-2'>
         {extraOptionData.extras.map((extra) => {
 
-          if (extraOptionData.min === 1 && extraOptionData.max === 1) {
-
+          if (extraOptionData.max === 1) {
             return (
               <div key={extra.id} className='flex justify-between'>
                 <div className='flex gap-2 items-center'>
@@ -74,7 +74,7 @@ function ProductExtraSelector(props: ProductExtraSelectorProps): React.JSX.Eleme
             );
           }
 
-          if (extraOptionData.min === 1 && extraOptionData.max > 1) {
+          if (extraOptionData.max > 1) {
             const isChecked = checked.some(e => e.id === extra.id);
             const isDisabled = checked.length >= extraOptionData.max && !isChecked;
 
@@ -102,17 +102,6 @@ function ProductExtraSelector(props: ProductExtraSelectorProps): React.JSX.Eleme
             );
           }
 
-          if (extraOptionData.min > 1 && extraOptionData.max > 1) {
-            return (
-              <div key={extra.id} className='flex justify-between'>
-                <div className='flex gap-2 items-center'>
-                  <input type='checkbox' id={extra.id} />
-                  <span>{extra.name}</span>
-                </div>
-                <span className='text-slate-600'>${extra.price}</span>
-              </div>
-            );
-          }
         })}
       </fieldset>
     </div>
