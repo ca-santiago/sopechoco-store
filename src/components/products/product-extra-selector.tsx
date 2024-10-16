@@ -2,13 +2,29 @@ import React from "react";
 import { Product, ProductExtra, ProductExtraOption } from "../../types";
 
 import cx from "classnames";
+import QuantitySelector from "../quantity-selector";
+
+type ExtraSelectionString = string; // extraOptionId:extraId:amount
+
+function selectionStringToExtraSelection(str: ExtraSelectionString): ExtraSelectionMap {
+  const [,extraId, amount] = str.split(':');
+  return {
+    extraId,
+    amount: parseInt(amount),
+  };
+}
 
 interface ProductExtraSelectorProps {
-  initialSelection: string[];
+  initialSelection: ExtraSelectionString[];
   extraOptionData: ProductExtraOption & { extras: ProductExtra[] };
   product: Product;
-  onSelectionChange: (selected: ProductExtra[], extraOptionId: string) => void;
+  onSelectionChange: (selections: ExtraSelectionString[]) => void;
 }
+
+interface ExtraSelectionMap {
+  amount: number;
+  extraId: string;
+};
 
 function ProductExtraSelector(props: ProductExtraSelectorProps): React.JSX.Element {
   const {
@@ -17,43 +33,83 @@ function ProductExtraSelector(props: ProductExtraSelectorProps): React.JSX.Eleme
     onSelectionChange,
   } = props;
 
-  const [checked, setChecked] = React.useState<ProductExtra[]>(
-    extraOptionData.extras.filter(extra => initialSelection.includes(extra.id))
+  const [checked2, setChecked2] = React.useState<ExtraSelectionMap[]>(
+    initialSelection.map(selectionStringToExtraSelection)
   );
+
+  const setSelections = (selections: ExtraSelectionMap[]) => {
+    setChecked2(selections);
+    onSelectionChange(selections.map((selection) => `${extraOptionData.id}:${selection.extraId}:${selection.amount}`));
+  }
 
   const handleCheckExtra = (extra: ProductExtra) => {
     return (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newChecked = e.target.checked ? [...checked, extra] : checked.filter(e => e.id !== extra.id);
-      setChecked(newChecked);
-      onSelectionChange(newChecked, extraOptionData.id);
+
+      const newChecked: ExtraSelectionMap[] = e.target.checked
+        ? [...checked2, { extraId: extra.id, amount: 1 }]
+        : checked2.filter(e => e.extraId !== extra.id);
+
+      setSelections(newChecked);
     }
   }
 
   const handleRadioChange = (extra: ProductExtra) => {
     return () => {
-      onSelectionChange([extra], extraOptionData.id);
+      onSelectionChange([`${extraOptionData.id}:${extra.id}:${1}`]);
     }
   }
+
+  const handleSelectionIncrement = (selection: ExtraSelectionMap) => {
+    return () => {
+      const newSelections = checked2.map(e => {
+        if (e.extraId === selection.extraId) e.amount++;
+        return e;
+      });
+      setSelections(newSelections);
+    }
+  }
+
+  const handleSelectionDecrement = (selection: ExtraSelectionMap) => {
+    return () => {
+      const newSelections = checked2.map(e => {
+        if (e.extraId === selection.extraId) e.amount--;
+        return e;
+      });
+      setSelections(newSelections);
+    }
+  }
+
+  const allSelectionsCount = checked2.reduce((acc, e) => acc + e.amount, 0);
+  const countLimitReached = extraOptionData.max === -1 ? false : allSelectionsCount >= extraOptionData.max;
 
   return (
     <div>
       <div className="flex flex-col">
-        <div>
+        <div className="flex justify-between">
           <h4 className='text-slate-700 font-semibold'>{extraOptionData.title}</h4>
-          <p className='text-slate-600 text-sm'>{extraOptionData.description}</p>
+
+          { extraOptionData.min === 1 &&
+            <p className="text-xs px-2 py-1 rounded-full bg-slate-400 text-white">Required</p>
+          }
         </div>
-        <div className="flex justify-between items-center">
-          {extraOptionData.max === 1 && <p className='text-slate-600 text-xs'>Select one extra</p>}
-          
-          {extraOptionData.max > 1 && <p className='text-slate-600 text-xs'>Select up to {extraOptionData.max} extras</p>}
-          
-          {/* Required indicator */}
-          {extraOptionData.min === 1 && <p className="text-xs px-2 py-1 rounded-full bg-slate-400 text-white">Required</p>}
+
+        <p className='text-slate-600 text-sm'>{extraOptionData.description}</p>
+
+        <div className="flex justify-between flex-row-reverse items-center">
+          {extraOptionData.max === 1 &&
+            <p className='text-slate-600 text-xs'>Select one extra</p>
+          }
+
+          {extraOptionData.min > 0 && extraOptionData.max === -1 &&
+            <p className='text-slate-600 text-xs'>Select up to {extraOptionData.max} extras</p>
+          }
+
         </div>
       </div>
-    
+
       <fieldset className='flex flex-col gap-1 mt-2'>
         {extraOptionData.extras.map((extra) => {
+          const foundExtraSelection = checked2.find(e => e.extraId === extra.id);
 
           if (extraOptionData.max === 1) {
             return (
@@ -62,10 +118,10 @@ function ProductExtraSelector(props: ProductExtraSelectorProps): React.JSX.Eleme
                   <input
                     type='radio'
                     value={extra.id}
-                    checked={ initialSelection.includes(extra.id) }
-                    name={ extraOptionData.id }
+                    checked={ !!foundExtraSelection }
+                    name={extraOptionData.id}
                     id={extra.id}
-                    onChange={ handleRadioChange(extra) }
+                    onChange={handleRadioChange(extra)}
                   />
                   <label htmlFor={extra.id}>{extra.name}</label>
                 </div>
@@ -75,8 +131,10 @@ function ProductExtraSelector(props: ProductExtraSelectorProps): React.JSX.Eleme
           }
 
           if (extraOptionData.max > 1) {
-            const isChecked = checked.some(e => e.id === extra.id);
-            const isDisabled = checked.length >= extraOptionData.max && !isChecked;
+            // const isChecked = checked.some(e => e.id === extra.id);
+
+            const maxReached = checked2.length >= extraOptionData.max;
+            const isDisabled = (maxReached || countLimitReached) && !foundExtraSelection;
 
             const labelClasses = cx({
               'text-slate-400': isDisabled,
@@ -89,21 +147,33 @@ function ProductExtraSelector(props: ProductExtraSelectorProps): React.JSX.Eleme
                   <input
                     type='checkbox'
                     id={extra.id}
-                    checked={ isChecked }
-                    onChange={ handleCheckExtra(extra) }
-                    disabled={ isDisabled }
+                    checked={!!foundExtraSelection}
+                    onChange={handleCheckExtra(extra)}
+                    disabled={isDisabled}
                   />
                   <span className={labelClasses} aria-disabled={isDisabled}>{extra.name}</span>
                 </div>
                 <p className='text-slate-600'>
-                  <span>$</span>{extra.price}
+                  <span>$</span>{extra.price * (foundExtraSelection?.amount || 1)}
                 </p>
+                {extraOptionData.multiSelect && foundExtraSelection &&
+                  <div>
+                    <QuantitySelector
+                      quantity={foundExtraSelection.amount}
+                      onDecrement={handleSelectionDecrement(foundExtraSelection)}
+                      onIncrement={handleSelectionIncrement(foundExtraSelection)}
+                      disableIncrement={allSelectionsCount >= extraOptionData.countLimit}
+                    />
+                  </div>
+                }
               </div>
             );
           }
 
         })}
       </fieldset>
+
+      {/* <pre className='text-wrap px-3 py-2 rounded-md mt-2 bg-slate-200'>{JSON.stringify(checked2, null, 2)}</pre> */}
     </div>
   );
 }

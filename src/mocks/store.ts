@@ -18,8 +18,11 @@ const __products: Product[] = [
         ],
         min: 1,
         max: 2,
+        multiSelect: false,
+        countLimit: 2,
       }
     ],
+    images: [],
     limit: 5,
     status: PRODUCT_STATUS.ACTIVE,
     inventoryQuantity: 10,
@@ -40,7 +43,9 @@ const __products: Product[] = [
           '3276f5b7-5d63-4667-a9ba-57cde8b47515',
         ],
         min: 1,
-        max: 1,
+        max: 10,
+        multiSelect: true,
+        countLimit: 10,
       },
       {
         id: 'tacos-bebidas-1',
@@ -52,10 +57,13 @@ const __products: Product[] = [
         ],
         min: 0,
         max: 99,
+        multiSelect: false,
+        countLimit: -1,
       }
     ],
     status: PRODUCT_STATUS.ACTIVE,
     inventoryQuantity: 100,
+    images: [],
   },
   {
     id: '8418032c-4042-4d4d-a813-95d332648d05',
@@ -65,6 +73,7 @@ const __products: Product[] = [
     extras: [],
     status: PRODUCT_STATUS.ACTIVE,
     inventoryQuantity: 10,
+    images: [],
   }
 ];
 

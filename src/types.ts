@@ -21,6 +21,8 @@ export interface ProductExtraOption {
   extrasId: string[];
   min: number;
   max: number;
+  multiSelect: boolean;
+  countLimit: number;
 }
 
 export interface Product {
@@ -28,6 +30,8 @@ export interface Product {
   name: string;
   price: number;
   description: string;
+
+  images: string[];
 
   limit?: number;
   status: (typeof PRODUCT_STATUS)[keyof typeof PRODUCT_STATUS];

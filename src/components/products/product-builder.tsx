@@ -1,23 +1,10 @@
 import React from "react";
 import { useStoreCart } from "../../stores/cart";
-import { CartItem, Product, ProductExtra, ProductExtraSelection } from "../../types";
+import { CartItem, Product } from "../../types";
 import ProductExtraSelector from "./product-extra-selector";
 import QuantitySelector from "../quantity-selector";
 import { useImmer } from "use-immer";
 import { v4 } from "uuid";
-
-function getExtrasFromCartItem(cartItem: CartItem, extras: ProductExtra[]): ProductExtraSelection {
-  return cartItem.addedExtras.reduce((acc, extra) => {
-    const [sectionId, extraId] = extra.split(':');
-    const foundExtra = extras.find(e => e.id === extraId);
-
-    if (foundExtra) {
-      acc[sectionId] = [...acc[sectionId] || [], foundExtra.id];
-    }
-
-    return acc;
-  }, {} as ProductExtraSelection);
-}
 
 interface ProductBuilderProps {
   productData: Product;
@@ -34,10 +21,6 @@ function ProductBuilder(props: ProductBuilderProps) {
     extras,
     addCartItem,
   } = useStoreCart();
-
-  const [selectedExtras, setSelectedExtras] = useImmer<ProductExtraSelection>(
-    cartItem ? getExtrasFromCartItem(cartItem, extras) : {}
-  );
 
   const [productItem, setProductItem] = useImmer<CartItem>(
     cartItem ||
@@ -71,20 +54,22 @@ function ProductBuilder(props: ProductBuilderProps) {
   const decrementQuantity = () => setProductItem(prev => { prev.quantity-- });
   const incrementQuantity = () => setProductItem(prev => { prev.quantity++ });
 
-  const handleExtraSelectionChange = (selection: ProductExtra[], extraOptionId: string) => {
-    setSelectedExtras(prev => { prev[extraOptionId] = selection.map(extra => extra.id) });
-
+  const handleExtraSelectionChange = (newSelections: string[]) => {
     setProductItem(prev => {
-      const thisExtraOptionExtrasRemoved = prev.addedExtras.filter(e => !e.startsWith(extraOptionId));
-      const newExtras = selection.map(extra => `${extraOptionId}:${extra.id}`);
-      prev.addedExtras = [...thisExtraOptionExtrasRemoved, ...newExtras];
+      const thisExtraOptionExtrasRemoved = prev.addedExtras.filter(e => {
+        const [sectionId,] = e.split(':');
+        return !newSelections.some(s => s.startsWith(sectionId));
+      });
+
+      prev.addedExtras = [...thisExtraOptionExtrasRemoved, ...newSelections];
     });
   }
 
-  const extraPrices: number[] = Object.values(selectedExtras).flat().map(s => {
-    const extra = extras.find(e => e.id === s);
-    return extra?.price || 0;
-  });
+  const extraPrices: number[] = productItem.addedExtras.map(extra => {
+    const [, extraId, qty] = extra.split(':');
+    const foundExtra = extras.find(e => e.id === extraId);
+    return foundExtra ? foundExtra.price * parseInt(qty) : 0;
+  }, []);
 
   const addDisabled = !areAllRequiredExtrasAdded;
   const totalPrice = productData.price + extraPrices.reduce((acc, price) => acc + price, 0);
@@ -107,8 +92,7 @@ function ProductBuilder(props: ProductBuilderProps) {
       <div className="empty:hidden flex flex-col gap-4">
         {processedExtras.map((extraOption) =>
           <ProductExtraSelector
-            initialSelection={selectedExtras[extraOption.id] || []}
-            // onSelectionChange={handleExtraSelectionChange}
+            initialSelection={ productItem.addedExtras.filter(e => e.startsWith(extraOption.id)) }
             onSelectionChange={handleExtraSelectionChange}
             key={extraOption.min}
             extraOptionData={extraOption}
@@ -138,9 +122,9 @@ function ProductBuilder(props: ProductBuilderProps) {
       </div>
 
       {/* Internal state prev */}
-      {/* <div className="mt-4">
-        <pre className="text-wrap">{JSON.stringify(productItem, null, 2)}</pre>
-      </div> */}
+      <div className="rounded-md bg-slate-200 p-2">
+        <pre className="text-wrap text-xs text-slate-700">{JSON.stringify(productItem, null, 2)}</pre>
+      </div>
     </form>
   );
 }
