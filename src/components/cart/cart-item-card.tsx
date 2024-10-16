@@ -5,6 +5,7 @@ import { useStoreCart } from "@/stores/cart";
 
 import { FaPen, FaTrash } from "react-icons/fa6";
 import { getProductPriceWithExtras } from "@/helpers/product";
+import { BiUser } from "react-icons/bi";
 
 interface ProductCartCardProps {
   product: Product;
@@ -47,7 +48,7 @@ function ProductCartCard(props: ProductCartCardProps) {
       <div className='flex flex-col gap-1 w-full ml-1'>
         <div className='flex flex-col'>
           <div className='flex justify-between items-center gap-2'>
-            <h2 className='text-slate-800 font-semibold text-xl'>{product.name}</h2>
+            <h2 className='text-slate-700 font-semibold text-2xl'>{product.name}</h2>
             <p className="text-slate-700 font-semibold text-sm">${product.price}</p>
           </div>
           { productNotAvailable &&
@@ -57,14 +58,27 @@ function ProductCartCard(props: ProductCartCardProps) {
           }
         </div>
 
-        <div className='flex flex-col'>
+        <ul className='list-disc ml-[22px] marker:text-slate-600'>
           {foundExtras.map(extra => (
-            <div key={extra.id} className='flex justify-between'>
-              <span className='text-slate-500 text-sm'>{extra.name}</span>
-              <span className='text-slate-500 text-sm'>${extra.price}</span>
-            </div>
+            <li key={extra.id} className="">
+              <p className='text-slate-500 text-sm flex justify-between'>
+                {extra.name}
+                <span className='text-slate-500 text-sm'>${extra.price}</span>
+              </p>
+            </li>
           ))}
-        </div>
+        </ul>
+
+        { cartItem.additionalInstructions &&
+          <button onClick={ onEditClick } className="mt-2">
+            <p className='text-slate-500 text-sm flex gap-1 items-center select-none cursor-pointer'>
+              <span>
+                <BiUser />
+              </span>
+              {cartItem.additionalInstructions?.substring(0, 50)}...
+            </p>
+          </button>
+        }
 
         <div className='flex w-full justify-end items-center mt-3 gap-4'>
           <div className="flex gap-2 text-slate-500">

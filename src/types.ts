@@ -57,6 +57,7 @@ export type CartProductMapping = {
 
 export interface CartItem {
   itemId: string;
+  additionalInstructions?: string;
   productId: string;
   addedExtras: string[];
   quantity: number;

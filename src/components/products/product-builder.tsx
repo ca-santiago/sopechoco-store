@@ -75,6 +75,9 @@ function ProductBuilder(props: ProductBuilderProps) {
   const totalPrice = productData.price + extraPrices.reduce((acc, price) => acc + price, 0);
   const total = totalPrice * productItem.quantity;
 
+  const handleAdditionalInstructionsChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => 
+    setProductItem(prev => { prev.additionalInstructions = e.target.value || undefined; });
+
   return (
     <form
       className="flex flex-col gap-4 h-fit"
@@ -99,6 +102,15 @@ function ProductBuilder(props: ProductBuilderProps) {
             product={productData}
           />
         )}
+      </div>
+
+      <div>
+        <textarea 
+          placeholder="Additional instructions"
+          value={productItem.additionalInstructions}
+          onChange={handleAdditionalInstructionsChange}
+          className="p-2 rounded-md border-2 border-slate-200 w-full h-24" 
+        />
       </div>
 
       <div className="flex justify-between">
