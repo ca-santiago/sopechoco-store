@@ -1,4 +1,4 @@
-import { CartItem, Product, ProductExtra } from "@/types";
+import { CartItem, ExtraSelectionMap, ExtraSelectionString, Product, ProductExtra } from "@/types";
 
 const getPricesFromExtras = (cartItem: CartItem, extras: ProductExtra[]) => {
   const { addedExtras } = cartItem;
@@ -19,7 +19,16 @@ const getProductPriceWithExtras = (product: Product, cartItem: CartItem, storeEx
   return total;
 }
 
+function selectionStringToExtraSelection(str: ExtraSelectionString): ExtraSelectionMap {
+  const [,extraId, amount] = str.split(':');
+  return {
+    extraId,
+    amount: parseInt(amount),
+  };
+}
+
 export {
   getProductPriceWithExtras,
-  getPricesFromExtras
+  getPricesFromExtras,
+  selectionStringToExtraSelection,
 };

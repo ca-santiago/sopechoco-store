@@ -1,18 +1,8 @@
 import React from "react";
-import { Product, ProductExtra, ProductExtraOption } from "../../types";
+import { ExtraSelectionMap, ExtraSelectionString, Product, ProductExtra, ProductExtraOption } from "../../types";
 
-import cx from "classnames";
 import QuantitySelector from "../quantity-selector";
-
-type ExtraSelectionString = string; // extraOptionId:extraId:amount
-
-function selectionStringToExtraSelection(str: ExtraSelectionString): ExtraSelectionMap {
-  const [,extraId, amount] = str.split(':');
-  return {
-    extraId,
-    amount: parseInt(amount),
-  };
-}
+import { selectionStringToExtraSelection } from "@/helpers/product";
 
 interface ProductExtraSelectorProps {
   initialSelection: ExtraSelectionString[];
@@ -20,11 +10,6 @@ interface ProductExtraSelectorProps {
   product: Product;
   onSelectionChange: (selections: ExtraSelectionString[]) => void;
 }
-
-interface ExtraSelectionMap {
-  amount: number;
-  extraId: string;
-};
 
 function ProductExtraSelector(props: ProductExtraSelectorProps): React.JSX.Element {
   const {
@@ -136,22 +121,18 @@ function ProductExtraSelector(props: ProductExtraSelectorProps): React.JSX.Eleme
             const maxReached = checked2.length >= extraOptionData.max;
             const isDisabled = (maxReached || countLimitReached) && !foundExtraSelection;
 
-            const labelClasses = cx({
-              'text-slate-400': isDisabled,
-              'text-slate-700': !isDisabled
-            });
-
             return (
               <div key={extra.id} className='flex justify-between'>
                 <div className='flex gap-2 items-center'>
                   <input
+                    className="peer"
                     type='checkbox'
                     id={extra.id}
                     checked={!!foundExtraSelection}
                     onChange={handleCheckExtra(extra)}
                     disabled={isDisabled}
                   />
-                  <span className={labelClasses} aria-disabled={isDisabled}>{extra.name}</span>
+                  <label htmlFor={extra.id} className='peer-disabled:text-slate-400 text-slate-700' aria-disabled={isDisabled}>{extra.name}</label>
                 </div>
                 <p className='text-slate-600'>
                   <span>$</span>{extra.price * (foundExtraSelection?.amount || 1)}

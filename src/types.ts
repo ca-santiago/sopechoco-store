@@ -42,10 +42,12 @@ export interface Product {
 
 // Product builder types
 
-export interface ProductExtraSelection {
-  // [key: string]: ProductExtra[];
-  [key: string]: string[];
-}
+export type ExtraSelectionString = string; // extraOptionId:extraId:amount
+
+export interface ExtraSelectionMap {
+  amount: number;
+  extraId: string;
+};
 
 
 // Cart types
