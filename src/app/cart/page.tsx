@@ -133,7 +133,7 @@ function CartPage() {
         </p>
       </div>
 
-      <pre className='text-wrap'>{JSON.stringify(cartItems, null, 2)}</pre>
+      <pre className='text-wrap bg-slate-200 rounded-md p-2 text-slate-600 text-xs'>{JSON.stringify(cartItems, null, 2)}</pre>
     </CartContainer>
   )
 }
