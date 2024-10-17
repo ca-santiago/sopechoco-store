@@ -12,7 +12,7 @@ function CartInlineSummary() {
   return (
     <div className='flex gap-3 justify-between'>
       <div className='flex items-center justify-center gap-2'>
-        <div className='h-5 w-5'>
+        <div className='h-5 w-5 animate-bounce-once' key={ items.length } >
           <FaCartShopping className='h-full w-full' />
         </div>
         <p className='text-slate-600 font-semibold'>{ items.length }</p>
