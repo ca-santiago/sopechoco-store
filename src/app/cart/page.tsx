@@ -84,6 +84,7 @@ function CartPage() {
         <ProductBuilder
           productData={selectedItem.product}
           cartItem={selectedItem.cartItem}
+          onSave={ () => setSelectedItem(null) }
         />
       </CartContainer>
     );

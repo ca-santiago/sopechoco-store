@@ -9,12 +9,14 @@ import { v4 } from "uuid";
 interface ProductBuilderProps {
   productData: Product;
   cartItem?: CartItem;
+  onSave?: () => void;
 };
 
 function ProductBuilder(props: ProductBuilderProps) {
   const {
     cartItem,
     productData,
+    onSave,
   } = props;
 
   const {
@@ -64,6 +66,11 @@ function ProductBuilder(props: ProductBuilderProps) {
       prev.addedExtras = [...thisExtraOptionExtrasRemoved, ...newSelections];
     });
   }
+
+  const handleSubmitForm = React.useCallback(() => {
+    addCartItem(productItem);
+    if (onSave) onSave();
+  }, [onSave, addCartItem, productItem]);
 
   const extraPrices: number[] = productItem.addedExtras.map(extra => {
     const [, extraId, qty] = extra.split(':');
@@ -126,7 +133,7 @@ function ProductBuilder(props: ProductBuilderProps) {
         <button
           type="submit"
           disabled={addDisabled}
-          onClick={() => addCartItem(productItem)}
+          onClick={ handleSubmitForm }
           className="p-2 rounded-md bg-blue-400 hover:bg-blue-500 text-white disabled:bg-gray-400"
         >
           {!!cartItem ? 'Update order' : 'Add'}
