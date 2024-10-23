@@ -88,7 +88,7 @@ function ProductBuilder(props: ProductBuilderProps) {
   return (
     <form
       className="flex flex-col gap-4 h-fit"
-      onSubmit={(e) => e.preventDefault()}
+      onSubmit={ handleSubmitForm }
     >
       <div>
         <h3 className="text-slate-700 font-semibold text-xl">{productData.name}</h3>
@@ -132,8 +132,7 @@ function ProductBuilder(props: ProductBuilderProps) {
 
         <button
           type="submit"
-          disabled={addDisabled}
-          onClick={ handleSubmitForm }
+          disabled={ addDisabled }
           className="p-2 rounded-md bg-blue-400 hover:bg-blue-500 text-white disabled:bg-gray-400"
         >
           {!!cartItem ? 'Update order' : 'Add'}
