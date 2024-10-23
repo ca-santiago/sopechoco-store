@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Order {
+  id String @id @default(cuid())
+
+  // The `createdAt` and `updatedAt` fields are managed by Prisma Client
+  
+  publicId String @unique
+  total     Int
+
+  // order details
+  // items OrderItem[]
+
+  orderDetails String
+
+  status String
+}
+
+// model OrderItem {
+//   id String @id @default(cuid())
+
+//   // The `createdAt` and `updatedAt` fields are managed by Prisma Client
+
+//   // order item details
+//   quantity Int
+//   total    Int
+
+//   // relations
+//   order    Order @relation(fields: [orderId], references: [id])
+//   orderId  String
+//   productId String
+// }
+
+model Product {
+  id          String @id @default(uuid())
+  title       String
+  description String
+  price       Int
+}
