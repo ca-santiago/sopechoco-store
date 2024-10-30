@@ -38,9 +38,9 @@ function ProductExtraSelector(props: ProductExtraSelectorProps): React.JSX.Eleme
     }
   }
 
-  const handleRadioChange = (extra: ProductExtra) => {
+  const handleRadioChange = (extra: ProductExtra, prevState: boolean) => {
     return () => {
-      onSelectionChange([`${extraOptionData.id}:${extra.id}:${1}`]);
+      prevState ? onSelectionChange([`${extraOptionData.id}:${extra.id}:${1}`]) : onSelectionChange([]);
     }
   }
 
@@ -106,7 +106,7 @@ function ProductExtraSelector(props: ProductExtraSelectorProps): React.JSX.Eleme
                     checked={ !!foundExtraSelection }
                     name={extraOptionData.id}
                     id={extra.id}
-                    onChange={handleRadioChange(extra)}
+                    onChange={handleRadioChange(extra, !!foundExtraSelection)}
                   />
                   <label htmlFor={extra.id}>{extra.name}</label>
                 </div>
@@ -129,7 +129,7 @@ function ProductExtraSelector(props: ProductExtraSelectorProps): React.JSX.Eleme
                     type='checkbox'
                     id={extra.id}
                     checked={!!foundExtraSelection}
-                    onChange={handleCheckExtra(extra)}
+                    onChange={handleCheckExtra(extra, )}
                     disabled={isDisabled}
                   />
                   <label htmlFor={extra.id} className='peer-disabled:text-slate-400 text-slate-700' aria-disabled={isDisabled}>{extra.name}</label>

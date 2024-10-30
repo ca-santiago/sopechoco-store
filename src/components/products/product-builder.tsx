@@ -41,28 +41,23 @@ function ProductBuilder(props: ProductBuilderProps) {
     };
   });
 
-  const areAllRequiredExtrasAdded = React.useMemo(() => {
-    return processedExtras.every(extra => {
-      if (extra.min === 0) return true;
+  const areAllRequiredExtrasAdded = processedExtras.every(extra => {
+    if (extra.min === 0) return true;
 
-      return productItem.addedExtras.some(addedExtra => {
-        const [sectionId,] = addedExtra.split(':');
-        return sectionId === extra.id;
-      });
+    return productItem.addedExtras.some(addedExtra => {
+      const [sectionId,] = addedExtra.split(':');
+      return sectionId === extra.id;
     });
-
-  }, [processedExtras, productItem.addedExtras]);
+  });
 
   const decrementQuantity = () => setProductItem(prev => { prev.quantity-- });
-  const incrementQuantity = () => {
-    setProductItem(prev => { prev.quantity++ });
-  }
+  const incrementQuantity = () => setProductItem(prev => { prev.quantity++ });
 
   const handleExtraSelectionChange = (newSelections: string[]) => {
     setProductItem(prev => {
       const thisExtraOptionExtrasRemoved = prev.addedExtras.filter(e => {
-        const [sectionId,] = e.split(':');
-        return !newSelections.some(s => s.startsWith(sectionId));
+        const [,extraId] = e.split(':');
+        return !!newSelections.some(s => s.startsWith(extraId));
       });
 
       prev.addedExtras = [...thisExtraOptionExtrasRemoved, ...newSelections];
