@@ -49,7 +49,9 @@ function ProductCartCard(props: ProductCartCardProps) {
         <div className='flex flex-col'>
           <div className='flex justify-between items-center gap-2'>
             <h2 className='text-slate-700 font-semibold text-2xl'>{product.name}</h2>
-            <p className="text-slate-700 font-semibold text-sm">${product.price}</p>
+            { product.price > 0 && 
+              <p className="text-slate-700 font-semibold text-sm">${product.price}</p>
+            }
           </div>
           { productNotAvailable &&
             <p className='text-red-400 text-xs'>

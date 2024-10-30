@@ -30,7 +30,7 @@ const __products: Product[] = [
   {
     id: '90637cf2-89b6-45fd-9880-d338735447ee',
     name: 'Orden de tacos',
-    price: 12,
+    price: 0,
     description: 'Ricos tacos de guisos de la casa',
     extras: [
       {
@@ -81,18 +81,18 @@ const __extras: ProductExtra[] = [
   {
     id: '986965e5-759f-4c2e-b88b-73511983eabd',
     name: 'Chicarron',
-    price: 1,
+    price: 5,
     description: 'Some nice guacamole',
   },
   {
     id: '2fc7a4e3-1dcc-4ef7-9cb4-c85ac506bfc2',
-    name: 'Sour cream',
-    price: 2,
+    name: 'Salpicon',
+    price: 0,
     description: 'Some nice'
   },
   {
     id: '74465580-4b4b-4130-91c7-9c3e3adfa827',
-    name: 'Chicharron',
+    name: 'Chicharron prenzado',
     price: 3,
     description: 'Some nice guacamole',
   },

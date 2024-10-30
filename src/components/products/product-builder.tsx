@@ -55,7 +55,6 @@ function ProductBuilder(props: ProductBuilderProps) {
 
   const decrementQuantity = () => setProductItem(prev => { prev.quantity-- });
   const incrementQuantity = () => {
-    console.log('Incrementing');
     setProductItem(prev => { prev.quantity++ });
   }
 
@@ -71,7 +70,6 @@ function ProductBuilder(props: ProductBuilderProps) {
   }
 
   const handleSubmitForm = React.useCallback(() => {
-    console.log('Submitting', productItem);
     addCartItem(productItem);
     if (onSave) onSave();
   }, [onSave, addCartItem, productItem]);
@@ -97,10 +95,12 @@ function ProductBuilder(props: ProductBuilderProps) {
       <div>
         <h3 className="text-slate-700 font-semibold text-xl">{productData.name}</h3>
         <p className="text-sm text-slate-500">{productData.description}</p>
-        <p className="text-sm text-slate-700 font-semibold mt-2">
-          <span>$</span>
-          {productData.price}
-        </p>
+        { productData.price > 0 && 
+          <p className="text-sm text-slate-700 font-semibold mt-2">
+            <span>$</span>
+            {productData.price}
+          </p>
+        }
       </div>
 
       <div className="empty:hidden flex flex-col gap-4">

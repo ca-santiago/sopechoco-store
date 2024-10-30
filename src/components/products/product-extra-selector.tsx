@@ -134,9 +134,11 @@ function ProductExtraSelector(props: ProductExtraSelectorProps): React.JSX.Eleme
                   />
                   <label htmlFor={extra.id} className='peer-disabled:text-slate-400 text-slate-700' aria-disabled={isDisabled}>{extra.name}</label>
                 </div>
-                <p className='text-slate-600'>
-                  <span>$</span>{extra.price * (foundExtraSelection?.amount || 1)}
-                </p>
+                { extra.price > 0 &&
+                  <p className='text-slate-700 font-semibold'>
+                   <span>$</span>{extra.price * (foundExtraSelection?.amount || 1)}
+                 </p>
+                }
                 {extraOptionData.multiSelect && foundExtraSelection &&
                   <div>
                     <QuantitySelector
