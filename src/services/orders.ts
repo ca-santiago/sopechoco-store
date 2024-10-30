@@ -1,4 +1,4 @@
-import { Order } from "@/types";
+import { Order, OrderStatus } from "@/types";
 import prisma from "../../prisma/client"
 
 import { Order as SysOrder } from '@prisma/client';
@@ -54,7 +54,7 @@ const getOrders = async (filters?: GetOrderFilters): Promise<Order[]> => {
   return found.map((order) => ({
     id: order.id,
     publicId: order.publicId,
-    status: order.status,
+    status: order.status as OrderStatus,
     total: order.total,
     cartDetails: order.cartDetails,
     createdAt: order.createdAt.toISOString(),
