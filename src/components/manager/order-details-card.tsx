@@ -68,8 +68,6 @@ function OrderDetailsCard(props: Props) {
 
   const isPending = order.status === 'PENDING';
 
-  console.log(cartItems);
-
   if (loading) {
     return (
       <div className='h-full w-full animate-pulse bg-slate-300 rounded-md' />
