@@ -21,7 +21,7 @@ function OrdersSection() {
         {acceptedOrders.length > 0 && (
           <div className="flex flex-col gap-4">
             <h3 className="text-slate-600 font-semibold text-left text-lg">Accepted Orders</h3>
-            <div className="grid grid-cols-[repeat(auto-fill,220px)] gap-x-2">
+            <div className="grid grid-cols-[repeat(auto-fill,220px)] gap-4">
               { acceptedOrders.map(order =>
                 <OrderDetailsCard key={order.id} order={order} />
               )}
