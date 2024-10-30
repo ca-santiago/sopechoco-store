@@ -14,35 +14,16 @@ datasource db {
 }
 
 model Order {
-  id String @id @default(cuid())
+  id           String @id @default(cuid())
+  publicId     String @unique
+  total        Int
+  cartDetails  String @db.Text()
+  status       String
+  deliverInfo  String @db.Text()
 
-  // The `createdAt` and `updatedAt` fields are managed by Prisma Client
-  
-  publicId String @unique
-  total     Int
-
-  // order details
-  // items OrderItem[]
-
-  orderDetails String
-
-  status String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
-
-// model OrderItem {
-//   id String @id @default(cuid())
-
-//   // The `createdAt` and `updatedAt` fields are managed by Prisma Client
-
-//   // order item details
-//   quantity Int
-//   total    Int
-
-//   // relations
-//   order    Order @relation(fields: [orderId], references: [id])
-//   orderId  String
-//   productId String
-// }
 
 model Product {
   id          String @id @default(uuid())

@@ -12,7 +12,7 @@ const getPricesFromExtras = (cartItem: CartItem, extras: ProductExtra[]) => {
   return extraPrices;
 };
 
-const getProductPriceWithExtras = (product: Product, cartItem: CartItem, storeExtras: ProductExtra[]) => {
+const getProductPriceWithExtras = (product: Product, cartItem: CartItem, storeExtras: ProductExtra[]): number => {
   const extraPrices = getPricesFromExtras(cartItem, storeExtras);
   const totalPrice = product.price + extraPrices.reduce((acc, price) => acc + price, 0);
   const total = totalPrice * cartItem.quantity;

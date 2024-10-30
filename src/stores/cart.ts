@@ -1,11 +1,14 @@
 import { create } from "zustand";
-import { Cart, CartItem, Product } from "../types";
+import { CartItem, Product, StoreCart } from "../types";
 import { v4 } from "uuid";
 
-const useStoreCart = create<Cart>(set => ({
+// TODO: Clean up unused methods
+
+const useStoreCart = create<StoreCart>(set => ({
   products: [],
   extras: [],
   items: [],
+  currentOrders: [],
   addCartItem: (item: CartItem) => {
     set(state => {
       const existingItem = state.items.findIndex(i => i.itemId === item.itemId);
@@ -21,11 +24,11 @@ const useStoreCart = create<Cart>(set => ({
           }),
         }
       } else {
-        console.log('Pusing');
-        state.items.push({ ...item });
+        console.log('Adding');
+        return {
+          items: [...state.items, item],
+        };
       }
-
-      return { items: state.items };
     });
   },
   addToCart: (product: Product) => {
@@ -99,6 +102,12 @@ const useStoreCart = create<Cart>(set => ({
   },
   setExtras: (extras) => {
     set({ extras });
+  },
+  setCurrentOrders: (orders) => {
+    set({ currentOrders: orders });
+  },
+  cleanCurrentOrders: () => {
+    set({ currentOrders: [] });
   },
   init: (cart) => {
     set(cart);

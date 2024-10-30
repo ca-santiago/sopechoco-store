@@ -1,4 +1,4 @@
-import { Product, PRODUCT_STATUS, ProductExtra } from "@/types";
+import { Product, ProductExtra } from "@/types";
 
 const __products: Product[] = [
   {
@@ -24,7 +24,7 @@ const __products: Product[] = [
     ],
     images: [],
     limit: 5,
-    status: PRODUCT_STATUS.ACTIVE,
+    status: 'ACTIVE',
     inventoryQuantity: 10,
   },
   {
@@ -61,7 +61,7 @@ const __products: Product[] = [
         countLimit: -1,
       }
     ],
-    status: PRODUCT_STATUS.ACTIVE,
+    status: "ACTIVE",
     inventoryQuantity: 100,
     images: [],
   },
@@ -71,7 +71,7 @@ const __products: Product[] = [
     price: 75,
     description: 'Mexican dish made of tortilla, cheese, and some other stuff',
     extras: [],
-    status: PRODUCT_STATUS.ACTIVE,
+    status: 'ACTIVE',
     inventoryQuantity: 10,
     images: [],
   }

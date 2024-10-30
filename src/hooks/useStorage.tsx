@@ -1,6 +1,6 @@
 import React from "react";
 
-function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T) => void] {
+function useSafeLocalStorage<T>(key: string, initialValue: T): [T, (value: T) => void, () => void] {
   const [storedValue, setStoredValue] = React.useState<T>(() => {
     try {
       const item = window.localStorage.getItem(key);
@@ -21,7 +21,16 @@ function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T) => voi
     }
   }, [key, storedValue]);
 
-  return [storedValue, setValue];
+  const remove = React.useCallback(() => {
+    try {
+      window.localStorage.removeItem(key);
+      setStoredValue(initialValue);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [key, initialValue]);
+
+  return [storedValue, setValue, remove];
 }
 
-export { useLocalStorage };
+export { useSafeLocalStorage };

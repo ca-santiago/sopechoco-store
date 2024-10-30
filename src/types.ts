@@ -1,10 +1,12 @@
 'use client';
 
-export const PRODUCT_STATUS = {
-  DRAFT: 'draft',
-  ACTIVE: 'active',
-  INACTIVE: 'inactive',
-  DELETED: 'deleted',
+
+export type ProductStatus = 'ACTIVE' | 'INACTIVE' | 'DELETED';
+
+export const PRODUCT_STATUS: { [key in ProductStatus]: key } = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  DELETED: 'DELETED',
 };
 
 export interface ProductExtra {
@@ -34,7 +36,7 @@ export interface Product {
   images: string[];
 
   limit?: number;
-  status: (typeof PRODUCT_STATUS)[keyof typeof PRODUCT_STATUS];
+  status: ProductStatus;
   inventoryQuantity?: number;
 
   extras: ProductExtraOption[];
@@ -65,20 +67,87 @@ export interface CartItem {
   quantity: number;
 }
 
-export interface Cart {
+export interface StoreCart extends Cart {
   products: Product[];
   extras: ProductExtra[];
-  items: CartItem[];
+  currentOrders: OrderSummary[];
+
   addCartItem: (item: CartItem) => void;
-  // @deprecated
-  addToCart: (product: Product) => void;
-  removeFromCart: (itemId: string) => void;
-  addExtraToProduct: (product: Product, extra: ProductExtra, extraOptionId: string) => void;
-  removeExtraFromProduct: (product: Product, extra: ProductExtra, extraOptionId: string) => void;
 
   // Initializers
   setCartItems: (items: CartItem[]) => void;
   setProducts: (products: Product[]) => void;
   setExtras: (extras: ProductExtra[]) => void;
-  init: (cart: Partial<Cart>) => void;
+  setCurrentOrders: (orders: OrderSummary[]) => void;
+  cleanCurrentOrders: () => void;
+  init: (cart: Partial<StoreCart>) => void;
+
+  // @deprecated
+  addToCart: (product: Product) => void;
+  removeFromCart: (itemId: string) => void;
+  addExtraToProduct: (product: Product, extra: ProductExtra, extraOptionId: string) => void;
+  removeExtraFromProduct: (product: Product, extra: ProductExtra, extraOptionId: string) => void;
+}
+
+export interface Cart {
+  items: CartItem[];
+}
+
+
+// Order types
+
+export interface Order {
+  id: string;
+  publicId: string;
+  status: OrderStatus;
+  cartDetails: string;
+  total: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type OrderStatus = 'PENDING' | 'ACCEPTED' | 'COMPLETED' | 'CANCELLED' | 'REJECTED' | 'REFUNDED';
+
+export interface OrderItem {
+  id: string;
+  total: number;
+  productDetail: ProductOrderDetail;
+  extraDetails: ExtraDetail[];
+}
+
+export interface ProductOrderDetail {
+  title: string;
+  price: number;
+  quantity: number;
+  userInstructions?: string;
+}
+
+export interface ExtraDetail {
+  title: string;
+  price: number;
+}
+
+// Local storage types
+
+export interface OrderSummary {
+  orderId: string;
+  publicId: string;
+  status: string;
+  total: number;
+  createdAt: string;
+}
+
+export interface ManagerStore extends ManagerStoreActions, ManagerStoreState { }
+
+export interface ManagerStoreState {
+  orders: Order[];
+  products: Product[];
+  extras: ProductExtra[];
+  // isOpen
+  // storeInformation: 
+}
+
+export interface ManagerStoreActions {
+  setOrders: (orders: Order[]) => void;
+  init: (store: Partial<ManagerStore>) => void;
 }

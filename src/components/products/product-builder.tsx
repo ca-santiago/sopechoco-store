@@ -1,4 +1,4 @@
-import React from "react";
+import React, { SyntheticEvent } from "react";
 import { useStoreCart } from "../../stores/cart";
 import { CartItem, Product } from "../../types";
 import ProductExtraSelector from "./product-extra-selector";
@@ -54,7 +54,10 @@ function ProductBuilder(props: ProductBuilderProps) {
   }, [processedExtras, productItem.addedExtras]);
 
   const decrementQuantity = () => setProductItem(prev => { prev.quantity-- });
-  const incrementQuantity = () => setProductItem(prev => { prev.quantity++ });
+  const incrementQuantity = () => {
+    console.log('Incrementing');
+    setProductItem(prev => { prev.quantity++ });
+  }
 
   const handleExtraSelectionChange = (newSelections: string[]) => {
     setProductItem(prev => {
@@ -68,6 +71,7 @@ function ProductBuilder(props: ProductBuilderProps) {
   }
 
   const handleSubmitForm = React.useCallback(() => {
+    console.log('Submitting', productItem);
     addCartItem(productItem);
     if (onSave) onSave();
   }, [onSave, addCartItem, productItem]);
@@ -88,7 +92,7 @@ function ProductBuilder(props: ProductBuilderProps) {
   return (
     <form
       className="flex flex-col gap-4 h-fit"
-      onSubmit={ handleSubmitForm }
+      onSubmit={ e => e.preventDefault() }
     >
       <div>
         <h3 className="text-slate-700 font-semibold text-xl">{productData.name}</h3>
@@ -131,7 +135,7 @@ function ProductBuilder(props: ProductBuilderProps) {
         </div>
 
         <button
-          type="submit"
+          onClick={handleSubmitForm}
           disabled={ addDisabled }
           className="p-2 rounded-md bg-blue-400 hover:bg-blue-500 text-white disabled:bg-gray-400"
         >
