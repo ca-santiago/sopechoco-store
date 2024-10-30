@@ -3,7 +3,6 @@ import React from 'react';
 import { deserializeCart } from '@/helpers/cart';
 import { Order } from '@/types';
 import { useManagerStore } from '@/stores/manager';
-import { updateOrderStatus } from '@/services/orders';
 import { acceptOrder, rejectOrder, setOrderPending } from '@/actions/order';
 import { CgSpinner } from 'react-icons/cg';
 // import QuantitySelector from '../quantity-selector';
@@ -80,27 +79,35 @@ function OrderDetailsCard(props: Props) {
       <h3 className='text-wrap text-ellipsis'>{order.publicId}</h3>
 
       <div className='grid grid-cols-[auto,1fr] auto-rows-auto gap-x-2 gap-y-2'>
-        {orderItems.map(({ product, cartItem }) => (
-          <div key={cartItem.itemId} className='grid gap-x-2 justify-start items-center grid-cols-subgrid grid-rows-2 row-span-1 col-span-2'>
-            <div className='grid grid-cols-subgrid col-span-2'>
-              <p className='text-slate-900 col-start-1'>- {product.name}</p>
-              <p className='font-semibold text-slate-800 text-sm col-start-2 text-end'>x{cartItem.quantity}</p>
-            </div>
-            <div className='ml-4 text-slate-500'>
-              {cartItem.addedExtras.map(extId => {
-                const [, extraId, quantity] = extId.split(':');
-                const extra = extras.find(e => e.id === extraId);
+        {orderItems.map(({ product, cartItem }) => {
 
-                if (!extra) return null;
-                return (
-                  <div>
-                    <p key={extraId} className='text-xs'>- {extra?.name} x{quantity}</p>
-                  </div>
-                );
-              }).filter(Boolean)}
+          return (
+            <div key={cartItem.itemId} className='grid gap-x-2 justify-start items-center grid-cols-subgrid grid-rows-2 row-span-1 col-span-2'>
+              <div className='grid grid-cols-subgrid col-span-2'>
+                <p className='text-slate-900 col-start-1'>- {product.name}</p>
+                <p className='font-semibold text-slate-800 text-sm col-start-2 text-end'>x{cartItem.quantity}</p>
+              </div>
+              <div className='ml-4 text-slate-500'>
+                {/* TODO: Render extraOption title here, need a component to handle this logic out of JSX */}
+                {cartItem.addedExtras.map(extId => {
+                  const [sectionId, extraId, quantity] = extId.split(':');
+                  const extra = extras.find(e => e.id === extraId);
+                  const extraOption = product.extras.find(extraSec => extraSec.id === sectionId);
+                  if (!extra || !extraOption) return null;
+
+                  const text = `- ${extra.name} ${extraOption.multiSelect ? 'x' + quantity : ''}`;
+                  return (
+                    <div>
+                      <p key={extraId} className='text-xs'>
+                        {text}
+                      </p>
+                    </div>
+                  );
+                }).filter(Boolean)}
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
 
       {/* DEBUG INFO */}
@@ -122,8 +129,8 @@ function OrderDetailsCard(props: Props) {
           </div>
         }
 
-        { processing && 
-          <CgSpinner size={24} className='animate-spin text-blue-500' /> 
+        {processing &&
+          <CgSpinner size={24} className='animate-spin text-blue-500' />
         }
 
         {isPending && !processing &&
@@ -140,11 +147,11 @@ function OrderDetailsCard(props: Props) {
         }
 
         {/* DEV ONLY */}
-        { order.status === 'ACCEPTED' && !processing &&
+        {order.status === 'ACCEPTED' && !processing &&
           <button
             onClick={revertToPending}
             className='text-white rounded-full px-2 py-1 bg-yellow-500'
-          >Revert</button> 
+          >Revert</button>
         }
       </div>
     </div>

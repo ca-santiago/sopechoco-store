@@ -11,8 +11,6 @@ function OrdersSection() {
   const pendingOrders = currentOrders.filter(order => order.status === 'PENDING');
   const rejectOrders = currentOrders.filter(order => order.status === 'REJECTED');
 
-  console.log(currentOrders);
-
   return (
     <section className="w-full px-8 pt-8 grid grid-cols-[1fr,300px] min-h-screen bg-blue-50">
       <div className="flex flex-col gap-8">
