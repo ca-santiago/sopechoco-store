@@ -10,6 +10,19 @@ const useManagerStore = create<ManagerStore>(set => ({
   },
   setOrders: (orders) => {
     set({ orders });
+  },
+  updateOrderInfo: (order) => {
+    set(state => {
+      const orders = state.orders.map(o => {
+        if (o.id === order.id) {
+          return order;
+        }
+
+        return o;
+      });
+
+      return { orders };
+    });
   }
 }));
 

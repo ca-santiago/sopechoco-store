@@ -149,5 +149,6 @@ export interface ManagerStoreState {
 
 export interface ManagerStoreActions {
   setOrders: (orders: Order[]) => void;
+  updateOrderInfo: (order: Order) => void;
   init: (store: Partial<ManagerStore>) => void;
 }

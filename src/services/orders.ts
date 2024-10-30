@@ -2,6 +2,7 @@ import { Order, OrderStatus } from "@/types";
 import prisma from "../../prisma/client"
 
 import { Order as SysOrder } from '@prisma/client';
+import OrderMapper from "@/mappers/order";
 
 const randomChar = (str: string) => str[Math.floor(Math.random() * str.length)];
 
@@ -50,20 +51,24 @@ const getOrders = async (filters?: GetOrderFilters): Promise<Order[]> => {
       status: filters.status,
     } : {},
   });
-
-  return found.map((order) => ({
-    id: order.id,
-    publicId: order.publicId,
-    status: order.status as OrderStatus,
-    total: order.total,
-    cartDetails: order.cartDetails,
-    createdAt: order.createdAt.toISOString(),
-    updatedAt: order.updatedAt.toISOString(),
-  }));
+  return found.map((order) => OrderMapper.dbToDomain(order));
 }
+
+const updateOrderStatus = async (id: string, status: OrderStatus): Promise<Order> => {
+  const result = await prisma.order.update({
+    where: {
+      id
+    },
+    data: {
+      status
+    }
+  })
+  return OrderMapper.dbToDomain(result);
+};
 
 export {
   createOrder,
   getOrderById,
   getOrders,
+  updateOrderStatus,
 }

@@ -11,7 +11,6 @@ const ManagerPage = async () => {
 
   return (
     <ManagerProvider value={{ extras, products, orders }} >
-      <h1>Manager Page</h1>
       <OrdersSection />
     </ManagerProvider>
   );

@@ -2,10 +2,10 @@
 
 import { serializeCart } from "@/helpers/cart";
 import { getProductPriceWithExtras } from "@/helpers/product";
-import { createOrder } from "@/services/orders";
+import { createOrder, updateOrderStatus } from "@/services/orders";
 import { getProductsById } from "@/services/product";
 import { getProductExtrasById } from "@/services/product-extra";
-import { CartItem, Order } from "@/types";
+import { CartItem, Order, OrderStatus } from "@/types";
 
 async function setOrder(cartItems: CartItem[]): Promise<Order> {
   const cartDetails = serializeCart(cartItems);
@@ -37,11 +37,37 @@ async function setOrder(cartItems: CartItem[]): Promise<Order> {
   return {
     ...order,
     createdAt: order.createdAt.toISOString(),
-    updatedAt: order.createdAt.toISOString(),
+    updatedAt: order.updatedAt.toISOString(),
+    status: order.status as OrderStatus,
   };
 }
 
+const acceptOrder = async (orderId: string): Promise<Order> => {
+  return updateOrderStatus(orderId, 'ACCEPTED');
+}
+
+const rejectOrder = async (orderId: string): Promise<Order> => {
+  return updateOrderStatus(orderId, 'REJECTED');
+}
+
+const completeOrder = async (orderId: string): Promise<Order> => {
+  return updateOrderStatus(orderId, 'COMPLETED');
+}
+
+const cancelOrder = async (orderId: string): Promise<Order> => {
+  return updateOrderStatus(orderId, 'CANCELLED');
+}
+
+const setOrderPending = async (orderId: string): Promise<Order> => {
+  return updateOrderStatus(orderId, 'PENDING');
+}
+
 export {
-  setOrder
+  setOrder,
+  acceptOrder,
+  rejectOrder,
+  completeOrder,
+  cancelOrder,
+  setOrderPending,
 }
 
