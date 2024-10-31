@@ -12,8 +12,8 @@ function CartSection() {
   const currentOrders = useStoreCart(s => s.currentOrders);
 
   return (
-    <section>
-      <div className='w-full md:w-3/4 lg:w-2/4 xl:w-1/4 mx-auto p-4'>
+    <section className="flex flex-col gap-6 py-8 bg-slate-50 min-h-screen">
+      <div className='w-full md:w-3/4 lg:w-2/4 xl:w-1/4 mx-auto'>
         <InlineCurrentOrders />
       </div>
       <CartContainer>

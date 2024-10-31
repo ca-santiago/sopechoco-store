@@ -33,12 +33,31 @@ const createOrder = async (order: OrderArg): Promise<SysOrder> => {
   });
 }
 
-const getOrderById = async (id: string) => {
-  return prisma.order.findUnique({
+const getOrderById = async (id: string): Promise<Order | null> => {
+  const res = await prisma.order.findUnique({
     where: {
       id
     }
-  })
+  });
+  console.log({ res });
+  if (!res) return null;
+
+  return OrderMapper.dbToDomain(res);
+}
+
+const findOrdersByIds = async (ids: string[]): Promise<Array<Order | null>> => {
+  const results = await prisma.order.findMany({
+    where: {
+      id: {
+        in: ids,
+      }
+    }
+  });
+
+  return results.map(r => {
+    if (!r) return null;
+    return OrderMapper.dbToDomain(r);
+  });
 }
 
 interface GetOrderFilters {
@@ -71,4 +90,5 @@ export {
   getOrderById,
   getOrders,
   updateOrderStatus,
+  findOrdersByIds,
 }

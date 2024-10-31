@@ -2,7 +2,7 @@
 
 import { serializeCart } from "@/helpers/cart";
 import { getProductPriceWithExtras } from "@/helpers/product";
-import { createOrder, updateOrderStatus } from "@/services/orders";
+import { createOrder, findOrdersByIds, getOrderById, updateOrderStatus } from "@/services/orders";
 import { getProductsById } from "@/services/product";
 import { getProductExtrasById } from "@/services/product-extra";
 import { CartItem, Order, OrderStatus } from "@/types";
@@ -42,6 +42,10 @@ async function setOrder(cartItems: CartItem[]): Promise<Order> {
   };
 }
 
+async function getOrdersByIds(ids: string[]): Promise<Array<Order | null>> {
+  return findOrdersByIds(ids);
+}
+
 const acceptOrder = async (orderId: string): Promise<Order> => {
   return updateOrderStatus(orderId, 'ACCEPTED');
 }
@@ -69,5 +73,6 @@ export {
   completeOrder,
   cancelOrder,
   setOrderPending,
+  getOrdersByIds,
 }
 

@@ -8,8 +8,8 @@ const InlineCurrentOrders = () => {
 
   if (currentOrders.length === 1) {
     return (
-      <div className='px-2 py-1 bg-slate-200 rounded-md w-full'>
-        <div className='flex gap-2 items-center'>
+      <div className='p-4 rounded-md w-full'>
+        <div className='flex gap-2 items-center bg-slate-200'>
           <p className='text-slate-700 font-semibold'>
             1 orden en progreso:
           </p>
