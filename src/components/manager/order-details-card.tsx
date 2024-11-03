@@ -122,11 +122,11 @@ function OrderDetailsCard(props: Props) {
       <div className='flex justify-between items-center'>
         <p>${order.total}</p>
 
-        {!isPending &&
+        {/* {!isPending &&
           <div className='px-2 py-1 bg-gray-200 text-slate-700 font-semibold text-xs w-fit rounded-full'>
             <p>{order.status}</p>
           </div>
-        }
+        } */}
 
         {processing &&
           <CgSpinner size={24} className='animate-spin text-blue-500' />

@@ -9,6 +9,7 @@ const useStoreCart = create<StoreCart>(set => ({
   extras: [],
   items: [],
   currentOrders: [],
+  isStoreOpen: false,
   addCartItem: (item: CartItem) => {
     set(state => {
       const existingItem = state.items.findIndex(i => i.itemId === item.itemId);

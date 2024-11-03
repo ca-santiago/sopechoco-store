@@ -19,10 +19,9 @@ function ProductBuilder(props: ProductBuilderProps) {
     onSave,
   } = props;
 
-  const {
-    extras,
-    addCartItem,
-  } = useStoreCart();
+  const extras = useStoreCart(s => s.extras);
+
+  const addCartItem = useStoreCart(s => s.addCartItem);
 
   const [productItem, setProductItem] = useImmer<CartItem>(
     cartItem ||
@@ -132,9 +131,9 @@ function ProductBuilder(props: ProductBuilderProps) {
         <button
           onClick={handleSubmitForm}
           disabled={ addDisabled }
-          className="p-2 rounded-md bg-blue-400 hover:bg-blue-500 text-white disabled:bg-gray-400"
+          className="p-2 px-4 rounded-md bg-blue-400 hover:bg-blue-500 text-white disabled:bg-gray-400"
         >
-          {!!cartItem ? 'Update order' : 'Add'}
+          {!!cartItem ? 'Update order' : 'Agregar'}
         </button>
       </div>
 

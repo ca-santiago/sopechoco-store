@@ -12,6 +12,7 @@ import { BiSolidLeftArrowCircle } from "react-icons/bi";
 function ProductSection() {
   const cartItems = useStoreCart(s => s.items);
   const products = useStoreCart(s => s.products);
+  const isStoreOpen = useStoreCart(s => s.isStoreOpen);
 
   const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null);
 
@@ -23,6 +24,12 @@ function ProductSection() {
   return (
     <section className='w-full  gap-x-4 grid grid-cols-1 gap-y-4'>
       <InlineCurrentOrders />
+
+      { !isStoreOpen &&
+        <div className='bg-red-50 w-full border-2 border-red-200 text-red-600 p-2 rounded-md'>
+          <h3 className='text-red-800'>Store is closed</h3>
+        </div>
+      }
 
       { cartItems.length > 0 &&
         <div className=' bg-blue-50 w-full border-2 border-slate-200 text-slate-600 p-2 rounded-md'>

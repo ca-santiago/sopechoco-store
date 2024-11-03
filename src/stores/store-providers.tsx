@@ -9,7 +9,8 @@ interface Props {
   store: {
     extras: ProductExtra[];
     products: Product[];
-  }
+    isOpen: boolean;
+  },
 }
 
 function StoreProvider(props: PropsWithChildren<Props>) {
@@ -18,6 +19,7 @@ function StoreProvider(props: PropsWithChildren<Props>) {
     store: {
       extras,
       products,
+      isOpen,
     },
   } = props;
 
@@ -43,6 +45,7 @@ function StoreProvider(props: PropsWithChildren<Props>) {
       extras,
       products,
       currentOrders: currOrdersStorage,
+      isStoreOpen: isOpen,
     });
   }, []); // eslint-disable-line
 

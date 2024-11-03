@@ -72,6 +72,8 @@ export interface StoreCart extends Cart {
   extras: ProductExtra[];
   currentOrders: OrderSummary[];
 
+  isStoreOpen: boolean;
+
   addCartItem: (item: CartItem) => void;
 
   // Initializers
@@ -143,12 +145,22 @@ export interface ManagerStoreState {
   orders: Order[];
   products: Product[];
   extras: ProductExtra[];
-  // isOpen
+  isStoreOpen: boolean;
   // storeInformation: 
 }
 
 export interface ManagerStoreActions {
   setOrders: (orders: Order[]) => void;
+  setIsOpen: (isOpen: boolean) => void;
   updateOrderInfo: (order: Order) => void;
   init: (store: Partial<ManagerStore>) => void;
+}
+
+export interface StoreInfo {
+  name: string;
+  description: string;
+  address: string;
+  phone: string;
+  email: string;
+  logo: string;
 }

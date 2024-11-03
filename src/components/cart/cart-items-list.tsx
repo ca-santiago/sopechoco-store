@@ -15,16 +15,17 @@ function validateCartItems(items: CartProductMapping[]) {
   return invalidProducts.length === 0;
 }
 
-interface CartItemListProps {
-  onEditClick?: (cartItemId: string) => void;
-}
+// interface CartItemListProps {
+//   onEditClick?: (cartItemId: string) => void;
+// }
 
-const CartItemsList = (props: CartItemListProps) => {
+const CartItemsList = () => {
   const cartItems = useStoreCart(s => s.items);
   const currentOrders = useStoreCart(s => s.currentOrders);
 
   const storeExtras = useStoreCart(s => s.extras);
   const storeProducts = useStoreCart(s => s.products);
+  const isStoreOpen = useStoreCart(s => s.isStoreOpen);
 
   const setCartItems = useStoreCart(s => s.setCartItems);
   const setCurrentOrders = useStoreCart(s => s.setCurrentOrders);
@@ -122,17 +123,24 @@ const CartItemsList = (props: CartItemListProps) => {
         ))}
       </ul>
 
-      {!canCheckout &&
-        <p className='text-red-500 text-sm w-full flex justify-end items-center gap-1'>
+      {canCheckout && isStoreOpen &&
+        <p className='text-red-400 text-sm w-full flex justify-end items-center gap-1'>
           <PiWarningCircleLight />
           Platillos no disponibles
         </p>
       }
 
+      {!isStoreOpen && 
+        <p className='text-red-400 text-sm w-full flex justify-end items-center gap-1'>
+          <PiWarningCircleLight />
+          Tienda cerrada
+        </p> 
+      }
+
       <div className='flex justify-end gap-4 items-center'>
         <button
           className='px-2 py-1 rounded-md bg-blue-500 text-white disabled:bg-slate-300'
-          disabled={!canCheckout || creatingOrder}
+          disabled={!canCheckout || creatingOrder || !isStoreOpen}
           onClick={handleSetOrder}
         >
           { creatingOrder ?

@@ -9,6 +9,7 @@ interface Props {
     extras: ProductExtra[];
     orders: Order[];
     products: Product[];
+    isStoreOpen: boolean;
   };
 }
 
@@ -18,7 +19,8 @@ function ManagerProvider(props: PropsWithChildren<Props>) {
     value: {
       extras,
       orders,
-      products
+      products,
+      isStoreOpen,
     },
   } = props;
 
@@ -29,6 +31,7 @@ function ManagerProvider(props: PropsWithChildren<Props>) {
       orders,
       extras,
       products,
+      isStoreOpen,
     });
   }, []);
 

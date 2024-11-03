@@ -5,11 +5,15 @@ const useManagerStore = create<ManagerStore>(set => ({
   orders: [],
   extras: [],
   products: [],
+  isStoreOpen: false,
   init: (store) => {
     set(store);
   },
   setOrders: (orders) => {
     set({ orders });
+  },
+  setIsOpen: (isOpen) => {
+    set({ isStoreOpen: isOpen });
   },
   updateOrderInfo: (order) => {
     set(state => {

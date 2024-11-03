@@ -3,13 +3,21 @@ import StoreProvider from '@/stores/store-providers';
 import { getProductExtras } from '@/services/product-extra';
 import { getProducts } from '@/services/product';
 import ProductSection from './product-section';
+import { getStoreOpenStatus } from '@/actions/store-info';
 
 async function Page() {
   const extras = await getProductExtras();
   const products = await getProducts();
+  const isStoreOpen = await getStoreOpenStatus();
 
   return (
-    <StoreProvider store={{ extras: extras, products: products }}>
+    <StoreProvider
+      store={{
+        extras,
+        products,
+        isOpen: isStoreOpen
+      }}
+    >
       <div className='text-slate-800 bg-slate-50 h-screen'>
         <div className='h-12 shadow-md bg-white w-full flex items-center justify-center'>
           <h1 className='text-3xl text-slate-700 text-center font-semibold p-4'>Products</h1>
