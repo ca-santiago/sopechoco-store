@@ -2,7 +2,7 @@
 
 import { serializeCart } from "@/helpers/cart";
 import { getProductPriceWithExtras } from "@/helpers/product";
-import { createOrder, findOrdersByIds, getOrderById, updateOrderStatus } from "@/services/orders";
+import { createOrder, findOrdersByIds, updateOrderStatus } from "@/services/orders";
 import { getProductsById } from "@/services/product";
 import { getProductExtrasById } from "@/services/product-extra";
 import { CartItem, Order, OrderStatus } from "@/types";

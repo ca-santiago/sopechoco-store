@@ -1,4 +1,4 @@
-import React, { SyntheticEvent } from "react";
+import React from "react";
 import { useStoreCart } from "../../stores/cart";
 import { CartItem, Product } from "../../types";
 import ProductExtraSelector from "./product-extra-selector";

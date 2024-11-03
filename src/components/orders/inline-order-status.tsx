@@ -2,10 +2,10 @@ import { deserializeCart } from "@/helpers/cart";
 import { OrderStatusToNaturalLanguage } from "@/helpers/status";
 import { useStoreCart } from "@/stores/cart";
 import { CartItem, Order, Product } from "@/types";
-import moment from "moment";
-import { BiUser } from "react-icons/bi";
 import { BsClockFill } from "react-icons/bs";
 import { PiUserList } from "react-icons/pi";
+
+import moment from "moment";
 
 interface Props {
   order: Order;

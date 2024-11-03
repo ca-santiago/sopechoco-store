@@ -40,7 +40,8 @@ function ProductExtraSelector(props: ProductExtraSelectorProps): React.JSX.Eleme
 
   const handleRadioChange = (extra: ProductExtra, prevState: boolean) => {
     return () => {
-      prevState ? onSelectionChange([`${extraOptionData.id}:${extra.id}:${1}`]) : onSelectionChange([]);
+      const newSelection = prevState ? [`${extraOptionData.id}:${extra.id}:${1}`] : [];
+      onSelectionChange(newSelection);
     }
   }
 

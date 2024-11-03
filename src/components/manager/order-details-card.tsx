@@ -97,11 +97,9 @@ function OrderDetailsCard(props: Props) {
 
                     const text = `• ${extra.name} ${extraOption.multiSelect ? 'x' + quantity : ''}`;
                     return (
-                      <div>
-                        <p key={extraId} className='text-xs'>
-                          {text}
-                        </p>
-                      </div>
+                      <p key={extraId} className='text-xs'>
+                        {text}
+                      </p>
                     );
                   }).filter(Boolean)}
                 </div>
