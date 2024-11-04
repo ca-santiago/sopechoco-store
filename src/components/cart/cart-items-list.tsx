@@ -53,26 +53,23 @@ const CartItemsList = () => {
     });
   }, []);
 
-
   const handleRemoveFromCart = React.useCallback((cartItem: CartItem) => {
     removeCartItem(cartItem.itemId);
   }, [removeCartItem]);
-
 
   const handleOrderCreate = React.useCallback((order: Order) => {
     setCartItems([]);
     setCurrentOrders([...currentOrders, { orderId: order.id, ...order }]);
   }, [setCartItems, setCurrentOrders]);
 
-
-  const handleSetOrder = React.useCallback(async () => {
+  const handleSetOrder = React.useCallback(() => {
     const isValid = validateCartItems(cartProducts);
     if (!isValid) return false;
 
     setCreatingOrder(true);
-    await setOrder(cartItems)
+    setOrder(cartItems)
       .then(handleOrderCreate)
-      .catch(error => console.log('Error', error))
+      .catch(console.error)
       .finally(() => setCreatingOrder(false));
   }, [cartItems]);
 
@@ -81,7 +78,6 @@ const CartItemsList = () => {
       const { cartItem, product } = item;
 
       acc += getProductPriceWithExtras(product, cartItem, storeExtras);
-
       return acc;
     }, 0);
   }, [cartProducts, storeExtras]);
@@ -104,9 +100,7 @@ const CartItemsList = () => {
     );
   }
 
-  if (cartProducts.length === 0) {
-    return null;
-  }
+  if (cartProducts.length === 0) return null;
 
   return (
     <div className="flex flex-col gap-4">
@@ -123,18 +117,11 @@ const CartItemsList = () => {
         ))}
       </ul>
 
-      {canCheckout && isStoreOpen &&
+      {!canCheckout && isStoreOpen &&
         <p className='text-red-400 text-sm w-full flex justify-end items-center gap-1'>
           <PiWarningCircleLight />
           Platillos no disponibles
         </p>
-      }
-
-      {!isStoreOpen && 
-        <p className='text-red-400 text-sm w-full flex justify-end items-center gap-1'>
-          <PiWarningCircleLight />
-          Tienda cerrada
-        </p> 
       }
 
       <div className='flex justify-end gap-4 items-center'>
@@ -152,6 +139,15 @@ const CartItemsList = () => {
           {`Total: \$${cartTotalPrice}`}
         </p>
       </div>
+
+
+      {isStoreOpen && 
+        <p className='text-red-400 text-sm w-full flex justify-end items-center gap-2'>
+          <PiWarningCircleLight size={ 22 } />
+          Tienda cerrada. Podrás completar tu orden cuando el establecimiento abra nuevamente
+        </p>
+      }
+
     </div>
   )
 }

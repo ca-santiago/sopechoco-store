@@ -1,7 +1,7 @@
 import { createClient } from 'redis';
 
 const redisClient = createClient({
-  url: 'redis://default:sxXbHnxfuBhiNnznqzcoTmcRlABKdPDz@autorack.proxy.rlwy.net:59449',
+  url: process.env.REDIS_URL,
 });
 
 redisClient.connect();
