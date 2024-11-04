@@ -48,27 +48,55 @@ function ProductCartCard(props: ProductCartCardProps) {
       <div className='flex flex-col gap-1 w-full ml-1'>
         <div className='flex flex-col'>
           <div className='flex justify-between items-center gap-2'>
-            <h2 className='text-slate-700 font-semibold text-2xl'>{product.name}</h2>
-            { product.price > 0 && 
-              <p className="text-slate-700 font-semibold text-sm">${product.price}</p>
+            <h2 className='text-slate-700 font-semibold text-2xl'>
+              {product.name}
+            </h2>
+
+            {product.price > 0 &&
+              <p className="text-slate-600 font-semibold">
+                ${product.price}
+              </p>
             }
           </div>
-          { productNotAvailable &&
+
+          {productNotAvailable &&
             <p className='text-red-400 text-xs'>
               Este producto no está disponible
             </p>
           }
         </div>
 
-        <ul className='list-disc ml-[22px] marker:text-slate-600'>
-          {foundExtras.map(extra => (
-            <li key={extra.id} className="">
-              <p className='text-slate-500 text-sm flex justify-between'>
-                {extra.name}
-                <span className='text-slate-500 text-sm'>${extra.price}</span>
-              </p>
-            </li>
-          ))}
+        <ul className='list-disc ml-[16px] marker:text-slate-600 grid grid-cols-[1fr,1fr,auto] gap-y-1 gap-x-2'>
+          {foundExtras.map(extra => {
+            const [, , extQty] = cartItem.addedExtras.filter(e => e.includes(extra.id))[0].split(':');
+            const qty = parseInt(extQty);
+
+            const priceIndicator =  product.price > 0 ? '+' : '';
+            const qtyIndicator = qty > 1 ? 'x' + qty  : '';
+
+            return (
+              <li key={extra.id} className="grid grid-cols-subgrid col-span-3 items-center">
+                <p className='text-slate-600 col-start-1 col-span-1'>
+                  {extra.name}
+                </p>
+
+                { extra.price > 0 && qty > 1 && 
+                  <p className="text-slate-500 text-xs col-start-2 col-span-1 h-full items-center flex">
+                    {priceIndicator}${extra.price}
+                    <span className="font-semibold text-slate-600 ml-0.5">{qtyIndicator}</span>
+                  </p>
+                }
+
+                {extra.price > 0 &&
+                  <p className='text-slate-600 col-start-3 col-span-1 text-sm'>
+                    { product.price > 0 ? '+' : ''}
+                    ${extra.price * parseInt(extQty)}
+                  </p>
+                }
+              </li>
+            )
+          }
+          )}
         </ul>
 
         { cartItem.additionalInstructions &&
