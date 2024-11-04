@@ -4,9 +4,9 @@ const getPricesFromExtras = (cartItem: CartItem, extras: ProductExtra[]) => {
   const { addedExtras } = cartItem;
 
   const extraPrices: number[] = addedExtras.map(addedExtraId => {
-    const [, eId] = addedExtraId.split(':');
+    const [, eId, quantity] = addedExtraId.split(':');
     const extra = extras.find(e => e.id === eId);
-    return extra?.price || 0;
+    return extra ? extra.price * Number(quantity) : 0;
   });
 
   return extraPrices;

@@ -140,8 +140,7 @@ const CartItemsList = () => {
         </p>
       </div>
 
-
-      {isStoreOpen && 
+      {!isStoreOpen && 
         <p className='text-red-400 text-sm w-full flex justify-end items-center gap-2'>
           <PiWarningCircleLight size={ 22 } />
           Tienda cerrada. Podrás completar tu orden cuando el establecimiento abra nuevamente

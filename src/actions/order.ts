@@ -11,9 +11,7 @@ async function setOrder(cartItems: CartItem[]): Promise<Order> {
   const cartDetails = serializeCart(cartItems);
 
   const producIds = cartItems.map(item => item.productId);
-  const extrasIds = new Set(
-    cartItems.map(item => item.addedExtras).flat()
-  );
+  const extrasIds = new Set(cartItems.map(item => item.addedExtras.map(e => e.split(':')[1])).flat());
 
   const products = await getProductsById(...producIds);
   const extras = await getProductExtrasById(Array.from(extrasIds));
