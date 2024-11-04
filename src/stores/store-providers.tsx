@@ -33,7 +33,7 @@ function StoreProvider(props: PropsWithChildren<Props>) {
 
   React.useEffect(() => {
     setCartItemsStorage(cartItems);
-  }, [cartItems.length, setCartItemsStorage]);
+  }, [cartItems, setCartItemsStorage]);
 
   React.useEffect(() => {
     setStorageCurrentOrders(currentOrders);
