@@ -40,26 +40,19 @@ function ProductBuilder(props: ProductBuilderProps) {
     };
   });
 
-  const areAllRequiredExtrasAdded = processedExtras.every(extra => {
-    if (extra.min === 0) return true;
-
-    return productItem.addedExtras.some(addedExtra => {
-      const [sectionId,] = addedExtra.split(':');
-      return sectionId === extra.id;
-    });
+  const areAllRequiredExtrasAdded = productData.extras.every(extOpt => {
+    if (extOpt.min === 0) return true;
+    const addedExtraFound = productItem.addedExtras.find(ext => ext.startsWith(extOpt.id));
+    return !!addedExtraFound;
   });
 
   const decrementQuantity = () => setProductItem(prev => { prev.quantity-- });
   const incrementQuantity = () => setProductItem(prev => { prev.quantity++ });
 
-  const handleExtraSelectionChange = (newSelections: string[]) => {
+  const handleExtraSelectionChange = (extraOptionId: string) => (newSelections: string[]) => {
     setProductItem(prev => {
-      const thisExtraOptionExtrasRemoved = prev.addedExtras.filter(e => {
-        const [,extraId] = e.split(':');
-        return !!newSelections.some(s => s.startsWith(extraId));
-      });
-
-      prev.addedExtras = [...thisExtraOptionExtrasRemoved, ...newSelections];
+      const filteredExtras = prev.addedExtras.filter(ext => ext.split(':')[0] !== extraOptionId);
+      prev.addedExtras = [...filteredExtras, ...newSelections];
     });
   }
 
@@ -101,7 +94,7 @@ function ProductBuilder(props: ProductBuilderProps) {
         {processedExtras.map((extraOption) =>
           <ProductExtraSelector
             initialSelection={ productItem.addedExtras.filter(e => e.startsWith(extraOption.id)) }
-            onSelectionChange={handleExtraSelectionChange}
+            onSelectionChange={handleExtraSelectionChange(extraOption.id)}
             key={extraOption.min}
             extraOptionData={extraOption}
             product={productData}
