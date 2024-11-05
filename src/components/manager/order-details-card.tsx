@@ -1,14 +1,61 @@
 import React from 'react';
 
 import { deserializeCart } from '@/helpers/cart';
-import { Order } from '@/types';
+import { CartItem, Order, Product, ProductExtra } from '@/types';
 import { useManagerStore } from '@/stores/manager';
 import { acceptOrder, rejectOrder, setOrderPending } from '@/actions/order';
 import { CgSpinner } from 'react-icons/cg';
+import { BiUser } from 'react-icons/bi';
 // import QuantitySelector from '../quantity-selector';
 
 interface Props {
   order: Order;
+}
+
+function OrderCartItemDetails(props: { cartItem: CartItem, product: Product, extras: ProductExtra[] }) {
+  const {
+    cartItem,
+    product,
+    extras,
+  } = props;
+
+  return (
+    <div key={cartItem.itemId} className='grid gap-y-1 justify-start items-center grid-cols-subgrid grid-rows-[auto,auto] row-span-1 col-span-2'>
+      <div className='grid grid-cols-subgrid col-span-2'>
+        <p className='text-slate-700 col-start-1'>• {product.name}</p>
+        <p className='font-semibold text-slate-800 text-sm col-start-2 text-end'>x{cartItem.quantity}</p>
+      </div>
+
+      <div className='ml-4 text-slate-500'>
+        {/* TODO: Render extraOption title here, need a component to handle this logic out of JSX */}
+        {cartItem.addedExtras.map(extId => {
+          const [sectionId, extraId, quantity] = extId.split(':');
+          const extra = extras.find(e => e.id === extraId);
+          const extraOption = product.extras.find(extraSec => extraSec.id === sectionId);
+          if (!extra || !extraOption) return null;
+
+          const text = `• ${extra.name} ${extraOption.multiSelect ? 'x' + quantity : ''}`;
+          return (
+            <p key={extraId} className='text-xs'>
+              {text}
+            </p>
+          );
+        }).filter(Boolean)}
+      </div>
+
+      { cartItem.additionalInstructions &&
+        <div className='col-span-2 mt-1'>
+          <p className='text-slate-500 text-sm flex gap-1 items-center select-none cursor-pointer'>
+            <span>
+              <BiUser />
+            </span>
+            {cartItem.additionalInstructions?.substring(0, 50)}...
+          </p>
+        </div>
+      }
+
+    </div>
+  );
 }
 
 function OrderDetailsCard(props: Props) {
@@ -78,34 +125,15 @@ function OrderDetailsCard(props: Props) {
     <div className='text-wrap h-full w-full bg-white border-2 border-slate-200 p-3 rounded-md overflow-hidden flex gap-4 justify-between flex-col'>
       <div>
         <h3 className='text-wrap text-ellipsis text-slate-700 font-semibold'>{order.publicId}</h3>
-        <div className='grid grid-cols-[auto,1fr] auto-rows-auto gap-x-2 gap-y-2 mt-1'>
-          {orderItems.map(({ product, cartItem }) => {
-
-            return (
-              <div key={cartItem.itemId} className='grid gap-x-2 justify-start items-center grid-cols-subgrid grid-rows-[auto,auto] row-span-1 col-span-2'>
-                <div className='grid grid-cols-subgrid col-span-2'>
-                  <p className='text-slate-700 col-start-1'>• {product.name}</p>
-                  <p className='font-semibold text-slate-800 text-sm col-start-2 text-end'>x{cartItem.quantity}</p>
-                </div>
-                <div className='ml-4 text-slate-500'>
-                  {/* TODO: Render extraOption title here, need a component to handle this logic out of JSX */}
-                  {cartItem.addedExtras.map(extId => {
-                    const [sectionId, extraId, quantity] = extId.split(':');
-                    const extra = extras.find(e => e.id === extraId);
-                    const extraOption = product.extras.find(extraSec => extraSec.id === sectionId);
-                    if (!extra || !extraOption) return null;
-
-                    const text = `• ${extra.name} ${extraOption.multiSelect ? 'x' + quantity : ''}`;
-                    return (
-                      <p key={extraId} className='text-xs'>
-                        {text}
-                      </p>
-                    );
-                  }).filter(Boolean)}
-                </div>
-              </div>
-            )
-          })}
+        <div className='grid grid-cols-[auto,1fr] auto-rows-auto gap-x-2 gap-y-4 mt-1'>
+          {orderItems.map(({ product, cartItem }) => 
+            <OrderCartItemDetails
+              key={cartItem.itemId}
+              cartItem={cartItem}
+              product={product}
+              extras={extras}
+            /> 
+          )}
         </div>
       </div>
 
