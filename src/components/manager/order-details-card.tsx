@@ -130,8 +130,8 @@ function OrderDetailsCard(props: Props) {
   }
 
   return (
-    <div className='text-wrap h-full w-full bg-white border-2 border-slate-200 p-3 rounded-md overflow-hidden flex gap-4 justify-between flex-col'>
-      <div>
+    <div className='text-wrap h-full w-full bg-white border-2 border-slate-200 p-3 pt-2 rounded-md overflow-hidden flex gap-4 justify-between flex-col'>
+      <div className=''>
         <h3 className='text-wrap text-ellipsis text-slate-700 font-semibold text-lg'>{order.publicId}</h3>
         <div className='grid grid-cols-[auto,1fr] auto-rows-auto gap-x-2 gap-y-2 mt-2'>
           <p className='text-slate-700 font-semibold text-sm'>Products</p>
@@ -149,50 +149,40 @@ function OrderDetailsCard(props: Props) {
 
       </div>
 
-      {/* DEBUG INFO */}
-            
-      {/* <div className='p-2 rounded-md bg-slate-200'>
-        <pre className='text-xs text-slate-600'>{JSON.stringify(cartItems, null, 2)}</pre>
-      </div>
-      
-      <div className='p-2 rounded-md bg-slate-200 mt-4'>
-        <pre className='text-xs text-slate-600'>{JSON.stringify(orderItems, null, 2)}</pre>
-      </div> */}
-
       <div className='flex justify-between items-center'>
         <p>${order.total}</p>
-
-        {/* {!isPending &&
-          <div className='px-2 py-1 bg-gray-200 text-slate-700 font-semibold text-xs w-fit rounded-full'>
-            <p>{order.status}</p>
-          </div>
-        } */}
 
         {processing &&
           <CgSpinner size={24} className='animate-spin text-blue-500' />
         }
-
-        {isPending && !processing &&
-          <div>
-            <button
-              onClick={handleAcceptOrder}
-              className='text-white rounded-l-full px-2 py-1 bg-blue-500'
-            >Accept</button>
-            <button
-              onClick={handleRejectOrder}
-              className='text-white rounded-r-full px-2 py-1 bg-red-500'
-            >Reject</button>
-          </div>
-        }
-
-        {/* DEV ONLY */}
-        {order.status === 'ACCEPTED' && !processing &&
-          <button
-            onClick={revertToPending}
-            className='text-white rounded-full px-2 py-1 bg-yellow-500'
-          >Revert</button>
-        }
       </div>
+
+      {/* DEV ONLY */}
+      {order.status === 'ACCEPTED' && !processing &&
+        <button
+          onClick={revertToPending}
+          className='text-white rounded-full py-1 bg-yellow-500'
+        >
+          Revert
+        </button>
+      }
+
+      {isPending && !processing &&
+        <div className='grid grid-cols-2 rounded-md overflow-hidden'>
+          <button
+            onClick={handleAcceptOrder}
+            className='text-white px-2 py-1 bg-blue-500 hover:bg-blue-600 col-span-1 col-start-1'
+          >
+            Accept
+          </button>
+          <button
+            onClick={handleRejectOrder}
+            className='text-white px-2 py-1 bg-red-500 hover:bg-red-600 col-span-1 col-start-2'
+          >
+            Reject
+          </button>
+        </div>
+      }
     </div>
   );
 }
