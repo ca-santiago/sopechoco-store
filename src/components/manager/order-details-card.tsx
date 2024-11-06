@@ -6,7 +6,6 @@ import { useManagerStore } from '@/stores/manager-provider';
 import { acceptOrder, rejectOrder, setOrderPending } from '@/actions/order';
 import { CgSpinner } from 'react-icons/cg';
 import { BiUser } from 'react-icons/bi';
-// import QuantitySelector from '../quantity-selector';
 
 interface Props {
   order: Order;
@@ -20,13 +19,16 @@ function OrderCartItemDetails(props: { cartItem: CartItem, product: Product, ext
   } = props;
 
   return (
-    <div key={cartItem.itemId} className='grid gap-y-1 justify-start items-center grid-cols-subgrid grid-rows-[auto,auto] row-span-1 col-span-2'>
+    <div
+      key={cartItem.itemId}
+      className='grid gap-y-1 justify-start items-center grid-cols-subgrid grid-rows-[auto,auto] row-span-1 col-span-2 px-2 py-1 rounded-md bg-[rgb(231,232,235)]'
+    >
       <div className='grid grid-cols-subgrid col-span-2'>
         <p className='text-slate-700 col-start-1'>• {product.name}</p>
-        <p className='font-semibold text-slate-800 text-sm col-start-2 text-end'>x{cartItem.quantity}</p>
+        { cartItem.quantity > 1 && <p className='font-semibold text-slate-800 text-sm col-start-2 text-end'>x{cartItem.quantity}</p> }
       </div>
 
-      <div className='ml-4 text-slate-500'>
+      <div className='ml-2 text-slate-500 grid col-span-2'>
         {/* TODO: Render extraOption title here, need a component to handle this logic out of JSX */}
         {cartItem.addedExtras.map(extId => {
           const [sectionId, extraId, quantity] = extId.split(':');
@@ -34,11 +36,17 @@ function OrderCartItemDetails(props: { cartItem: CartItem, product: Product, ext
           const extraOption = product.extras.find(extraSec => extraSec.id === sectionId);
           if (!extra || !extraOption) return null;
 
-          const text = `• ${extra.name} ${extraOption.multiSelect ? 'x' + quantity : ''}`;
           return (
-            <p key={extraId} className='text-xs'>
-              {text}
-            </p>
+            <div key={extraId} className='grid grid-cols-[1fr,auto] col-span-2'>
+              <p className='text-xs col-start-1'>
+                { extra.name }
+              </p>
+              { Number(quantity) > 1 &&
+                <p className='text-xs text-slate-600 col-start-2'>
+                  { 'x' + quantity }
+                </p>
+              }
+            </div>
           );
         }).filter(Boolean)}
       </div>
@@ -124,8 +132,9 @@ function OrderDetailsCard(props: Props) {
   return (
     <div className='text-wrap h-full w-full bg-white border-2 border-slate-200 p-3 rounded-md overflow-hidden flex gap-4 justify-between flex-col'>
       <div>
-        <h3 className='text-wrap text-ellipsis text-slate-700 font-semibold'>{order.publicId}</h3>
-        <div className='grid grid-cols-[auto,1fr] auto-rows-auto gap-x-2 gap-y-4 mt-1'>
+        <h3 className='text-wrap text-ellipsis text-slate-700 font-semibold text-lg'>{order.publicId}</h3>
+        <div className='grid grid-cols-[auto,1fr] auto-rows-auto gap-x-2 gap-y-2 mt-2'>
+          <p className='text-slate-700 font-semibold text-sm'>Products</p>
           {orderItems.map(({ product, cartItem }) => 
             <OrderCartItemDetails
               key={cartItem.itemId}
@@ -135,11 +144,14 @@ function OrderDetailsCard(props: Props) {
             /> 
           )}
         </div>
+
+        {/* Delivery details section */}
+
       </div>
 
       {/* DEBUG INFO */}
-      {/*       
-      <div className='p-2 rounded-md bg-slate-200'>
+            
+      {/* <div className='p-2 rounded-md bg-slate-200'>
         <pre className='text-xs text-slate-600'>{JSON.stringify(cartItems, null, 2)}</pre>
       </div>
       
