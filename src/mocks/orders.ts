@@ -1,6 +1,6 @@
 import { Order } from "@/types";
 
-const testOrders: Order[] = [
+const testOrders: Order[] = [ // eslint-disable-line
     {
         "id": "cm2uvj8xv0000p3xwbziepe17",
         "publicId": "MXK-572",

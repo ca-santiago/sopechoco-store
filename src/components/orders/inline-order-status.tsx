@@ -1,11 +1,11 @@
 import { deserializeCart } from "@/helpers/cart";
 import { OrderStatusToNaturalLanguage } from "@/helpers/status";
-import { useStoreCart } from "@/stores/cart";
 import { CartItem, Order, Product } from "@/types";
 import { BsClockFill } from "react-icons/bs";
 import { PiUserList } from "react-icons/pi";
 
 import moment from "moment";
+import { useClientStore } from "@/stores/client-provider";
 
 interface Props {
   order: Order;
@@ -13,7 +13,7 @@ interface Props {
 
 function InlineOrderStatus(props: Props) {
   const { order } = props;
-  const products = useStoreCart(s => s.products);
+  const products = useClientStore(s => s.products);
 
   const cartDetails = deserializeCart(order.cartDetails);
 

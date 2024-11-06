@@ -1,8 +1,8 @@
 import { getProducts } from "@/services/product"
 import { getProductExtras } from "@/services/product-extra";
-import StoreProvider from "@/stores/store-providers"
 import ActiveOrdersSection from "./active-orders";
 import { getStoreStatus } from "@/services/store-info";
+import ClientStoreProvider from "@/stores/client-provider";
 
 async function OrdersPage() {
   const products = await getProducts();
@@ -10,17 +10,17 @@ async function OrdersPage() {
   const isStoreOpen = await getStoreStatus();
 
   return (
-    <StoreProvider
+    <ClientStoreProvider
       store={{
         products,
         extras,
-        isOpen: isStoreOpen,
+        isStoreOpen,
       }} 
     >
       <div className="w-full min-h-screen bg-blue-50">
         <ActiveOrdersSection />
       </div>
-    </StoreProvider>
+    </ClientStoreProvider>
   )
 }
 

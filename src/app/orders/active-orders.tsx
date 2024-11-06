@@ -1,16 +1,16 @@
 'use client';
 
 import React from "react";
-import { useStoreCart } from "@/stores/cart";
 import { Order } from "@/types";
 import { getOrdersByIds } from "@/actions/order";
 import InlineOrderStatus from "@/components/orders/inline-order-status";
 import Link from "next/link";
 import { FaStore } from "react-icons/fa6";
+import { useClientStore } from "@/stores/client-provider";
 
 function ActiveOrdersSection() {
-  const activeOrders = useStoreCart(s => s.currentOrders);
-  const setActiveOrders = useStoreCart(s => s.setCurrentOrders);
+  const activeOrders = useClientStore(s => s.currentOrders);
+  const setActiveOrders = useClientStore(s => s.setCurrentOrders);
 
   const [loading, setLoading] = React.useState(true);
   const [ordersData, setOrdersData] = React.useState<Order[]>([]);
@@ -45,7 +45,7 @@ function ActiveOrdersSection() {
     // It is created with [] by default (cart.ts L11) on first load, then on StoreProvider L40 init function is called on effect (after first render)
     // Causing a first render with no data followed by a second render with data
     // FIX: Use React context to initialize the store with the correct store data on first render
-  }, [activeOrders.length]);
+  }, [activeOrders.length]); // eslint-disable-line
 
   if (loading) {
     return null;
