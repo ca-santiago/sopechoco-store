@@ -1,8 +1,8 @@
-import { useStoreCart } from "@/stores/cart";
+import { useClientStore } from "@/stores/client-provider";
 import Link from "next/link";
 
 const InlineCurrentOrders = () => {
-  const currentOrders = useStoreCart(s => s.currentOrders);
+  const currentOrders = useClientStore(s => s.currentOrders);
 
   if (!currentOrders.length) return null;
 

@@ -1,10 +1,9 @@
 
-import StoreProvider from '@/stores/store-providers';
 import CartSection from './cart-section';
 import { getProductExtras } from '@/services/product-extra';
 import { getProducts } from '@/services/product';
 import { getStoreOpenStatus } from '@/actions/store-info';
-
+import ClientStoreProvider from '@/stores/client-provider';
 
 async function CartPage() {
   const extras = await getProductExtras();
@@ -12,15 +11,15 @@ async function CartPage() {
   const isStoreOpen = await getStoreOpenStatus();
 
   return (
-    <StoreProvider
+    <ClientStoreProvider
       store={{
-        extras,
         products,
-        isOpen: isStoreOpen
+        extras,
+        isStoreOpen,
       }}
     >
       <CartSection />
-    </StoreProvider>
+    </ClientStoreProvider>
   )
 }
 

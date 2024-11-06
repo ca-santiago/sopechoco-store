@@ -1,10 +1,10 @@
 import React from "react";
-import { useStoreCart } from "../../stores/cart";
 import { CartItem, Product } from "../../types";
 import ProductExtraSelector from "./product-extra-selector";
 import QuantitySelector from "../quantity-selector";
 import { useImmer } from "use-immer";
 import { v4 } from "uuid";
+import { useClientStore } from "@/stores/client-provider";
 
 interface ProductBuilderProps {
   productData: Product;
@@ -19,9 +19,9 @@ function ProductBuilder(props: ProductBuilderProps) {
     onSave,
   } = props;
 
-  const extras = useStoreCart(s => s.extras);
+  const extras = useClientStore(s => s.extras);
 
-  const addCartItem = useStoreCart(s => s.addCartItem);
+  const addCartItem = useClientStore(s => s.addToCart);
 
   const [productItem, setProductItem] = useImmer<CartItem>(
     cartItem ||

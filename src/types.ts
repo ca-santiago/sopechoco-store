@@ -72,34 +72,27 @@ export interface CartItem {
   quantity: number;
 }
 
-export interface StoreCart extends Cart {
+export interface ClientStoreState {
+  cartItems: CartItem[];
   products: Product[];
   extras: ProductExtra[];
   currentOrders: OrderSummary[];
 
   isStoreOpen: boolean;
+}
 
-  addCartItem: (item: CartItem) => void;
-
-  // Initializers
+export interface ClientStoreActions {
+  init: (store: Partial<ClientStore>) => void;
   setCartItems: (items: CartItem[]) => void;
   setProducts: (products: Product[]) => void;
   setExtras: (extras: ProductExtra[]) => void;
   setCurrentOrders: (orders: OrderSummary[]) => void;
   cleanCurrentOrders: () => void;
-  init: (cart: Partial<StoreCart>) => void;
 
-  // @deprecated
-  addToCart: (product: Product) => void;
-  removeFromCart: (itemId: string) => void;
-  addExtraToProduct: (product: Product, extra: ProductExtra, extraOptionId: string) => void;
-  removeExtraFromProduct: (product: Product, extra: ProductExtra, extraOptionId: string) => void;
+  addToCart: (product: CartItem) => void;
 }
 
-export interface Cart {
-  items: CartItem[];
-}
-
+export interface ClientStore extends ClientStoreState, ClientStoreActions { }
 
 // Order types
 

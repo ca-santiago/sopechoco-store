@@ -4,21 +4,20 @@ import CartInlineSummary from "@/components/cart/cart-inline-summary";
 import InlineCurrentOrders from "@/components/orders/inline-orders";
 import ProductBuilder from "@/components/products/product-builder";
 import ProductCard from "@/components/products/product-cart";
-import { useStoreCart } from "@/stores/cart";
+import { useClientStore } from "@/stores/client-provider";
 import { Product, PRODUCT_STATUS } from "@/types";
 import React from "react";
 import { BiSolidLeftArrowCircle } from "react-icons/bi";
 
 function ProductSection() {
-  const cartItems = useStoreCart(s => s.items);
-  const products = useStoreCart(s => s.products);
-  const isStoreOpen = useStoreCart(s => s.isStoreOpen);
-
+  const cartItems = useClientStore(s => s.cartItems);
+  const products = useClientStore(s => s.products);
+  const isStoreOpen = useClientStore(s => s.isStoreOpen);
+  
   const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null);
-
+  
   React.useEffect(() => {
     setSelectedProduct(null);
-    console.log('Cart items len changed')
   }, [cartItems.length]);
 
   return (
@@ -39,7 +38,7 @@ function ProductSection() {
 
       {!selectedProduct &&
         <div className='grid col-start-1 col-span-1'>
-          <div className='flex flex-col gap-4'>
+          <div className='flex flex-col gap-4 empty:hidden'>
             {products.filter(p => p.status === PRODUCT_STATUS.ACTIVE).map((product) => (
               <ProductCard
                 key={product.id}
@@ -64,7 +63,9 @@ function ProductSection() {
         </div>
       }
 
-      <pre className='text-wrap bg-slate-200 rounded-md p-2 text-slate-600 text-xs'>{JSON.stringify(cartItems, null, 2)}</pre>
+      <pre className='text-wrap bg-slate-200 rounded-md p-2 text-slate-600 text-xs'>
+        { JSON.stringify(cartItems, null, 2) }
+      </pre>
     </section>
   )
 }

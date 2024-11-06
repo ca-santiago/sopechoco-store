@@ -1,11 +1,11 @@
 import React from "react";
 
 import { CartItem, Product, PRODUCT_STATUS, ProductExtra } from "@/types";
-import { useStoreCart } from "@/stores/cart";
 
 import { FaPen, FaTrash } from "react-icons/fa6";
 import { getProductPriceWithExtras } from "@/helpers/product";
 import { BiUser } from "react-icons/bi";
+import { useClientStore } from "@/stores/client-provider";
 
 interface ProductCartCardProps {
   product: Product;
@@ -21,8 +21,8 @@ function ProductCartCard(props: ProductCartCardProps) {
     onEditClick,
     onDeleteClick,
   } = props;
-  
-  const storeExtras = useStoreCart(s => s.extras);
+
+  const storeExtras = useClientStore(s => s.extras);
 
   const foundExtras = React.useMemo<ProductExtra[]>(() => {
     return cartItem.addedExtras.reduce((acc, extra) => {

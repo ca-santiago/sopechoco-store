@@ -1,13 +1,11 @@
 import Link from 'next/link';
 import React from 'react'
-import { useStoreCart } from '@/stores/cart';
 import { FaCartShopping } from 'react-icons/fa6';
 import { HiOutlineChevronRight } from 'react-icons/hi';
+import { useClientStore } from '@/stores/client-provider';
 
 function CartInlineSummary() {
-  const {
-    items,
-  } = useStoreCart();
+  const items = useClientStore(s => s.cartItems);
 
   return (
     <div className='flex gap-3 justify-between'>

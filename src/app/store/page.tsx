@@ -1,9 +1,9 @@
 
-import StoreProvider from '@/stores/store-providers';
 import { getProductExtras } from '@/services/product-extra';
 import { getProducts } from '@/services/product';
 import ProductSection from './product-section';
 import { getStoreOpenStatus } from '@/actions/store-info';
+import ClientStoreProvider from '@/stores/client-provider';
 
 async function Page() {
   const extras = await getProductExtras();
@@ -11,11 +11,11 @@ async function Page() {
   const isStoreOpen = await getStoreOpenStatus();
 
   return (
-    <StoreProvider
+    <ClientStoreProvider
       store={{
-        extras,
         products,
-        isOpen: isStoreOpen
+        extras,
+        isStoreOpen,
       }}
     >
       <div className='text-slate-800 bg-slate-50 h-screen'>
@@ -27,7 +27,7 @@ async function Page() {
           <ProductSection />
         </div>  
       </div>
-    </StoreProvider>
+    </ClientStoreProvider>
   )
 }
 

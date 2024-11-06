@@ -1,6 +1,5 @@
 import { setOrder } from "@/actions/order";
 import { getProductPriceWithExtras } from "@/helpers/product";
-import { useStoreCart } from "@/stores/cart";
 import { CartItem, CartProductMapping, PRODUCT_STATUS } from "@/types";
 import { Order, Product } from "@/types";
 import React from "react";
@@ -8,7 +7,7 @@ import { PiWarningCircleLight } from "react-icons/pi";
 import ProductCartCard from "./cart-item-card";
 import { BiSolidLeftArrowCircle } from "react-icons/bi";
 import ProductBuilder from "../products/product-builder";
-
+import { useClientStore } from "@/stores/client-provider";
 
 function validateCartItems(items: CartProductMapping[]) {
   const invalidProducts = items.filter(({ product }) => product.status !== PRODUCT_STATUS.ACTIVE);
@@ -20,16 +19,15 @@ function validateCartItems(items: CartProductMapping[]) {
 // }
 
 const CartItemsList = () => {
-  const cartItems = useStoreCart(s => s.items);
-  const currentOrders = useStoreCart(s => s.currentOrders);
+  const cartItems = useClientStore(s => s.cartItems);
+  const currentOrders = useClientStore(s => s.currentOrders);
 
-  const storeExtras = useStoreCart(s => s.extras);
-  const storeProducts = useStoreCart(s => s.products);
-  const isStoreOpen = useStoreCart(s => s.isStoreOpen);
+  const storeExtras = useClientStore(s => s.extras);
+  const storeProducts = useClientStore(s => s.products);
+  const isStoreOpen = useClientStore(s => s.isStoreOpen);
 
-  const setCartItems = useStoreCart(s => s.setCartItems);
-  const setCurrentOrders = useStoreCart(s => s.setCurrentOrders);
-  const removeCartItem = useStoreCart(s => s.removeFromCart);
+  const setCartItems = useClientStore(s => s.setCartItems);
+  const setCurrentOrders = useClientStore(s => s.setCurrentOrders);
 
   const [selectedItem, setSelectedItem] = React.useState<CartProductMapping | null>(null);
   const [creatingOrder, setCreatingOrder] = React.useState(false);
@@ -54,13 +52,13 @@ const CartItemsList = () => {
   }, []);
 
   const handleRemoveFromCart = React.useCallback((cartItem: CartItem) => {
-    removeCartItem(cartItem.itemId);
-  }, [removeCartItem]);
+    setCartItems(cartItems.filter(i => i.itemId !== cartItem.itemId));
+  }, [setCartItems, cartItems]);
 
   const handleOrderCreate = React.useCallback((order: Order) => {
     setCartItems([]);
     setCurrentOrders([...currentOrders, { orderId: order.id, ...order }]);
-  }, [setCartItems, setCurrentOrders]);
+  }, [setCartItems, setCurrentOrders, currentOrders]);
 
   const handleSetOrder = React.useCallback(() => {
     const isValid = validateCartItems(cartProducts);
@@ -71,7 +69,7 @@ const CartItemsList = () => {
       .then(handleOrderCreate)
       .catch(console.error)
       .finally(() => setCreatingOrder(false));
-  }, [cartItems]);
+  }, [cartItems, cartProducts, handleOrderCreate]);
 
   const cartTotalPrice = React.useMemo(() => {
     return cartProducts.reduce((acc, item) => {

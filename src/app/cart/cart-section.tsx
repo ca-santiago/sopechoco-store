@@ -5,11 +5,11 @@ import CartContainer from "./container";
 import { FaStore } from "react-icons/fa6";
 import Link from "next/link";
 import CartItemsList from "@/components/cart/cart-items-list";
-import { useStoreCart } from "@/stores/cart";
+import { useClientStore } from "@/stores/client-provider";
 
 function CartSection() {
-  const cartItems = useStoreCart(s => s.items);
-  const currentOrders = useStoreCart(s => s.currentOrders);
+  const cartItems = useClientStore(s => s.cartItems);
+  const currentOrders = useClientStore(s => s.currentOrders);
 
   return (
     <section className="flex flex-col gap-6 py-8 bg-slate-50 min-h-screen">
