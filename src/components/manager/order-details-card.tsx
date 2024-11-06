@@ -2,7 +2,7 @@ import React from 'react';
 
 import { deserializeCart } from '@/helpers/cart';
 import { CartItem, Order, Product, ProductExtra } from '@/types';
-import { useManagerStore } from '@/stores/manager';
+import { useManagerStore } from '@/stores/manager-provider';
 import { acceptOrder, rejectOrder, setOrderPending } from '@/actions/order';
 import { CgSpinner } from 'react-icons/cg';
 import { BiUser } from 'react-icons/bi';

@@ -2,12 +2,12 @@
 
 import React from "react";
 import OrderDetailsCard from "@/components/manager/order-details-card";
-import { useManagerStore } from "@/stores/manager";
 import { closeStore, openStore } from "@/actions/store-info";
 
 import cx from 'classnames';
 import { GoDotFill } from "react-icons/go";
 import { BiStore } from "react-icons/bi";
+import { useManagerStore } from "@/stores/manager-provider";
 
 function OrdersSection() {
   const currentOrders = useManagerStore(s => s.orders);
