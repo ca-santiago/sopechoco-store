@@ -1,17 +1,17 @@
 import { OrderStatus } from "@/types";
 
-function OrderStatusToNaturalLanguage(status: OrderStatus): string {
+function OrderStatusToNaturalLanguage(status: OrderStatus, short?: boolean): string {
   switch (status) {
     case 'PENDING':
       return "Orden pendiente";
     case 'CANCELLED':
       return "Orden cancelada";
     case 'ACCEPTED':
-      return "El establecimiento está preparando tu orden";
+      return short ? "Orden aceptada" : "El establecimiento está preparando tu orden";
     case 'COMPLETED':
-      return "Tu orden está lista para ser recogida";
+      return short ? "Completada" : "Tu orden está lista para ser recogida";
     case 'REJECTED':
-      return "El establecimiento ha rechazado tu orden";
+      return short ? "Rechazada" : "El establecimiento ha rechazado tu orden";
     default:
       return "Unknown";
   }
