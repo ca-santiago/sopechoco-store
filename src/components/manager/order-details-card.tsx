@@ -86,16 +86,7 @@ function OrderDetailsCard(props: Props) {
     }
   ), [cartItems, products]);
 
-  const [loading, setLoading] = React.useState(true);
   const [processing, setProcessing] = React.useState(false);
-
-  React.useEffect(() => {
-    setLoading(true);
-    const timeout = setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-    return () => clearTimeout(timeout);
-  }, []);
 
   const handleAcceptOrder = () => {
     setProcessing(true);
@@ -122,12 +113,6 @@ function OrderDetailsCard(props: Props) {
   }
 
   const isPending = order.status === 'PENDING';
-
-  if (loading) {
-    return (
-      <div className='h-full w-full animate-pulse bg-slate-300 rounded-md' />
-    )
-  }
 
   return (
     <div className='text-wrap h-full w-full bg-white border-2 border-slate-200 p-3 pt-2 rounded-md overflow-hidden flex gap-4 justify-between flex-col'>

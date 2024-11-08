@@ -4,11 +4,20 @@ import { getProductExtras } from '@/services/product-extra';
 import { getProducts } from '@/services/product';
 import { getStoreOpenStatus } from '@/actions/store-info';
 import ClientStoreProvider from '@/stores/client-provider';
+import { unstable_noStore } from 'next/cache';
 
 async function CartPage() {
-  const extras = await getProductExtras();
-  const products = await getProducts();
-  const isStoreOpen = await getStoreOpenStatus();
+  unstable_noStore();
+
+  const [
+    extras,
+    products,
+    isStoreOpen,
+  ] = await Promise.all([
+    getProductExtras(),
+    getProducts(),
+    getStoreOpenStatus()
+  ]);
 
   return (
     <ClientStoreProvider

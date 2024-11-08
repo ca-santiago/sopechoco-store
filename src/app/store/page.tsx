@@ -4,11 +4,20 @@ import { getProducts } from '@/services/product';
 import ProductSection from './product-section';
 import { getStoreOpenStatus } from '@/actions/store-info';
 import ClientStoreProvider from '@/stores/client-provider';
+import { unstable_noStore } from 'next/cache';
 
 async function Page() {
-  const extras = await getProductExtras();
-  const products = await getProducts();
-  const isStoreOpen = await getStoreOpenStatus();
+  unstable_noStore();
+
+  const [
+    extras,
+    products,
+    isStoreOpen,
+  ] = await Promise.all([
+    getProductExtras(),
+    getProducts(),
+    getStoreOpenStatus()
+  ]);
 
   return (
     <ClientStoreProvider
@@ -25,7 +34,7 @@ async function Page() {
 
         <div className='w-full md:w-3/4 lg:w-2/4 xl:w-1/4 mx-auto p-4'>
           <ProductSection />
-        </div>  
+        </div>
       </div>
     </ClientStoreProvider>
   )
