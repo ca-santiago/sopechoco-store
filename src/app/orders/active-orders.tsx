@@ -13,6 +13,7 @@ function ActiveOrdersSection() {
   const setActiveOrders = useClientStore(s => s.setCurrentOrders);
 
   const [ordersData, setOrdersData] = React.useState<Order[]>([]);
+  const [loading, setLoading] = React.useState(false);
 
   const loadOrdersData = () => {
     const oIds = activeOrders.map(order => order.orderId);
@@ -25,17 +26,19 @@ function ActiveOrdersSection() {
   };
 
   const reconciliateOrders = (newOrders: Order[]) => {
+    setLoading(false);
     setOrdersData(newOrders);
 
     // Cleanup from local storage activeOrders not found on system
     const onlyExistingOrders = activeOrders.filter(o => !!newOrders.find(n => n.id === o.orderId));
-    setActiveOrders(onlyExistingOrders);
+    if (newOrders.length !== onlyExistingOrders.length) setActiveOrders(onlyExistingOrders);
   }
 
   React.useEffect(() => {
-    if (!activeOrders.length) return;
-    loadOrdersData();
+    if (activeOrders.length === ordersData.length) return;
 
+    setLoading(true);
+    loadOrdersData();
   }, [activeOrders]); // eslint-disable-line
 
   return (
@@ -49,13 +52,18 @@ function ActiveOrdersSection() {
         </div>
       </div>
 
-      {!ordersData.length &&
-        <div className="flex flex-col gap-6">
-          <div className="bg-slate-200 p-4 rounded-md w-full">
-            <p className="text-slate-700 font-semibold">
-              No hay ordenes activas
-            </p>
-          </div>
+      {ordersData.length === 0 && !loading &&
+        <div className="border-2 border-slate-200 bg-gray-100 p-4 rounded-md w-full flex flex-col gap-4 items-center">
+          <p className="text-slate-700 font-semibold">
+            No hay ordenes activas
+          </p>
+          <Link
+            href="/store"
+            className="rounded-md bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 flex gap-2 items-center"
+          >
+            Ordena algo ahora
+            <FaStore />
+          </Link>
         </div>
       }
 

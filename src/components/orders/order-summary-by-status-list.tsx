@@ -17,22 +17,12 @@ function OrderSummaryByStatusList(props: Props) {
     onOrderClick,
   } = props;
 
+  if (orders.length === 0) return null;
+
   const orderCardClasses = cx({
     'grid grid-rows-[auto,auto] grid-cols-[auto,auto] lg:grid-rows-1 lg:grid-cols-subgrid col-span-4': true,
     'gap-1 lg:gap-2 px-3 py-2 lg:p-3 bg-white border-2 border-slate-300 rounded-md justify-between items-center': true,
   });
-
-  if (orders.length === 0) {
-    return (
-      <div className="flex flex-col gap-6">
-        <div className="bg-slate-200 p-4 rounded-md w-full">
-          <p className="text-slate-700 font-semibold">
-            No hay ordenes activas
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="grid grid-cols-[auto,auto,auto,auto] gap-y-4 w-full">

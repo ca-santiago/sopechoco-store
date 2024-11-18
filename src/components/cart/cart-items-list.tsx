@@ -1,13 +1,12 @@
+import React from "react";
 import { setOrder } from "@/actions/order";
 import { getProductPriceWithExtras } from "@/helpers/product";
-import { CartItem, CartProductMapping, PRODUCT_STATUS } from "@/types";
-import { Order, Product } from "@/types";
-import React from "react";
-import { PiWarningCircleLight } from "react-icons/pi";
-import ProductCartCard from "./cart-item-card";
-import { BiSolidLeftArrowCircle } from "react-icons/bi";
-import ProductBuilder from "../products/product-builder";
 import { useClientStore } from "@/stores/client-provider";
+import { CartItem, CartProductMapping, Order, Product, PRODUCT_STATUS } from "@/types";
+import { BiSolidLeftArrowCircle } from "react-icons/bi";
+import { PiWarningCircleLight } from "react-icons/pi";
+import ProductBuilder from "../products/product-builder";
+import ProductCartCard from "./cart-item-card";
 
 function validateCartItems(items: CartProductMapping[]) {
   const invalidProducts = items.filter(({ product }) => product.status !== PRODUCT_STATUS.ACTIVE);
