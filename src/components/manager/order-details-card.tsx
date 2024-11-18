@@ -21,14 +21,14 @@ function OrderCartItemDetails(props: { cartItem: CartItem, product: Product, ext
   return (
     <div
       key={cartItem.itemId}
-      className='grid gap-y-1 justify-start items-center grid-cols-subgrid grid-rows-[auto,auto] row-span-1 col-span-2 px-2 py-1 rounded-md bg-[rgb(231,232,235)]'
+      className='grid gap-y-1 justify-start items-center grid-cols-subgrid row-span-1 col-span-2 px-2 py-1 rounded-md bg-[rgb(231,232,235)]'
     >
       <div className='grid grid-cols-subgrid col-span-2'>
-        <p className='text-slate-700 col-start-1'>• {product.name}</p>
+        <p className='text-slate-800 col-start-1'>{product.name}</p>
         { cartItem.quantity > 1 && <p className='font-semibold text-slate-800 text-sm col-start-2 text-end'>x{cartItem.quantity}</p> }
       </div>
 
-      <div className='ml-2 text-slate-500 grid col-span-2'>
+      <div className='ml-2 text-slate-500 grid grid-cols-[auto,1fr] grid-rows-auto col-span-2 gap-x-1'>
         {/* TODO: Render extraOption title here, need a component to handle this logic out of JSX */}
         {cartItem.addedExtras.map(extId => {
           const [sectionId, extraId, quantity] = extId.split(':');
@@ -37,15 +37,13 @@ function OrderCartItemDetails(props: { cartItem: CartItem, product: Product, ext
           if (!extra || !extraOption) return null;
 
           return (
-            <div key={extraId} className='grid grid-cols-[1fr,auto] col-span-2'>
-              <p className='text-xs col-start-1'>
+            <div key={extraId} className='grid grid-cols-subgrid col-span-2 row-span-1'>
+              <p className='text-xs text-slate-700 col-start-1 row-span-1 text-end'>
+                { quantity }
+              </p>
+              <p className='text-xs col-start-2 row-span-1 text-slate-600'>
                 { extra.name }
               </p>
-              { Number(quantity) > 1 &&
-                <p className='text-xs text-slate-600 col-start-2'>
-                  { 'x' + quantity }
-                </p>
-              }
             </div>
           );
         }).filter(Boolean)}

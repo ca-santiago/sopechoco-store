@@ -66,28 +66,27 @@ function ProductCartCard(props: ProductCartCardProps) {
           }
         </div>
 
-        <ul className='list-disc ml-[16px] marker:text-slate-600 grid grid-cols-[1fr,1fr,auto] gap-y-1 gap-x-2'>
+        <ul className='list-disc ml-[16px] marker:text-slate-600 grid grid-cols-[auto,1fr,auto] gap-1'>
           {foundExtras.map(extra => {
-            const [, , extQty] = cartItem.addedExtras.filter(e => e.includes(extra.id))[0].split(':');
+            const [extOptId, , extQty] = cartItem.addedExtras.filter(e => e.includes(extra.id))[0].split(':');
+            const foundExtDef = product.extras.find(e => e.id === extOptId);
             const qty = parseInt(extQty);
-
-            const priceIndicator =  product.price > 0 ? '+' : '';
-            const qtyIndicator = qty > 1 ? 'x' + qty  : '';
 
             return (
               <li key={extra.id} className="grid grid-cols-subgrid col-span-3 items-center">
-                <p className='text-slate-600 col-start-1 col-span-1'>
+                {foundExtDef && foundExtDef.multiSelect &&
+                  <div className="text-end col-start-1 col-span-1">
+                    <p>
+                      {qty}
+                    </p>
+                  </div>
+                }
+
+                <p className='text-slate-600 col-start-2 col-span-1'>
                   {extra.name}
                 </p>
 
-                { extra.price > 0 && qty > 1 && 
-                  <p className="text-slate-500 text-xs col-start-2 col-span-1 h-full items-center flex">
-                    {priceIndicator}${extra.price}
-                    <span className="font-semibold text-slate-600 ml-0.5">{qtyIndicator}</span>
-                  </p>
-                }
-
-                {extra.price > 0 &&
+                { extra.price > 0 &&
                   <p className='text-slate-600 col-start-3 col-span-1 text-sm'>
                     { product.price > 0 ? '+' : ''}
                     ${extra.price * parseInt(extQty)}
