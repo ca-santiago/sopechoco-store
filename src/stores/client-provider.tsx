@@ -4,7 +4,6 @@ import { CartItem, ClientStore, ClientStoreState, OrderSummary } from "@/types";
 import React, { createContext, PropsWithChildren } from "react";
 import { ClientStoreApi, createClientStore } from "./client";
 import { useStore } from "zustand";
-import { useSafeLocalStorage } from "@/hooks/useStorage";
 
 const context = createContext<ClientStoreApi | undefined>(undefined);
 
@@ -21,7 +20,6 @@ const ClientStoreProvider = (props: PropsWithChildren<Props>) => {
   const storeRef = React.useRef<ClientStoreApi>();
 
   if (!storeRef.current) {
-    console.log('Creating store');
     storeRef.current = createClientStore({
       cartItems: [],
       currentOrders: [],
@@ -31,30 +29,25 @@ const ClientStoreProvider = (props: PropsWithChildren<Props>) => {
     });
   }
 
-  const [lSOrders, setLSOrders] = useSafeLocalStorage<OrderSummary[]>('currentOrders', []);
-  const [lsCartItems, setLSCartItems] = useSafeLocalStorage<CartItem[]>('cartItems', []);
-
-  const setStore = useStore(storeRef.current, s => s.init);
-
-  const currentOrders = useStore(storeRef.current, s => s.currentOrders);
-  const cartItems = useStore(storeRef.current, s => s.cartItems);
-  
   React.useEffect(() => {
-    setStore({
-      currentOrders: lSOrders,
-      cartItems: lsCartItems,
+    const savedOrders = JSON.parse(window.localStorage.getItem('currentOrders') || '[]') as OrderSummary[];
+    const savedCartItems = JSON.parse(window.localStorage.getItem('cartItems') || '[]') as CartItem[];
+
+    storeRef.current!.setState(prev => ({
+      cartItems: savedCartItems.length ? savedCartItems : prev.cartItems,
+      currentOrders: savedOrders.length ? savedOrders : prev.currentOrders,
+    }));
+
+    storeRef.current!.subscribe((curr, prev) => {
+      if (curr.cartItems !== prev.cartItems) {
+        window.localStorage.setItem('cartItems', JSON.stringify(curr.cartItems));
+      }
+
+      if (curr.currentOrders !== prev.currentOrders) {
+        window.localStorage.setItem('currentOrders', JSON.stringify(curr.currentOrders));
+      }
     });
-  }, [storeRef.current]); // eslint-disable-line
-
-  React.useEffect(() => {
-    console.log('Setting cart items');
-    setLSCartItems(cartItems);
-  }, [cartItems]); // eslint-disable-line
-
-  React.useEffect(() => {
-    console.log('Setting current orders');
-    setLSOrders(currentOrders);
-  }, [currentOrders]); // eslint-disable-line
+  }, []); // eslint-disable-line
 
   return (
     <context.Provider value={storeRef.current}>
