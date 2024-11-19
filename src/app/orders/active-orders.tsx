@@ -13,7 +13,7 @@ function ActiveOrdersSection() {
   const setActiveOrders = useClientStore(s => s.setCurrentOrders);
 
   const [ordersData, setOrdersData] = React.useState<Order[]>([]);
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
 
   const loadOrdersData = () => {
     const oIds = activeOrders.map(order => order.orderId);
@@ -42,7 +42,7 @@ function ActiveOrdersSection() {
   }, [activeOrders]); // eslint-disable-line
 
   return (
-    <div className="flex flex-col gap-6 w-full px-4 sm:w-[400px] lg:w-[600px] mx-auto pt-8">
+    <div className="flex flex-col gap-4 w-full px-4 sm:w-[400px] lg:w-[600px] mx-auto pt-8">
       <div className='flex w-full gap-4 justify-between items-center'>
         <h1 className='text-3xl text-slate-700 text-center font-semibold'>Ordenes activas</h1>
         <div className='text-blue-500 rounded-full p-2 hover:text-blue-600 hover:bg-slate-200'>
@@ -65,6 +65,12 @@ function ActiveOrdersSection() {
             <FaStore />
           </Link>
         </div>
+      }
+
+      { loading &&
+        activeOrders.map((_, index) => (
+          <div key={index} className="border-2 border-slate-200 bg-white rounded-md px-4 py-6 animate-pulse" />
+        ))
       }
 
       <OrderSummaryByStatusList
